@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal — Exemplo JavaScript</title>
+    <style>
+        /* ============================================
+           Estilos da Página com Modal
+           ============================================ */
+
+        /* Reset e estilos globais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Título principal */
+        h1 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 28px;
+        }
+
+        p.descricao {
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        /* Botão para abrir o modal */
+        .btn-abrir-modal {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-abrir-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-abrir-modal:active {
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           Estilos do Modal (Janela Modal)
+           ============================================ */
+
+        /* Overlay — fundo escuro semitransparente que cobre a página */
+        .modal-overlay {
+            /* Posição fixa cobre toda a tela */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+
+            /* Centraliza o conteúdo do modal */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            /* Começa invisível */
+            opacity: 0;
+            visibility: hidden;
+
+            /* Transição suave para aparecer/desaparecer */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+
+            /* Fica acima de tudo na página */
+            z-index: 1000;
+        }
+
+        /* Quando o modal está ativo (visível) */
+        .modal-overlay.ativo {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Conteúdo do modal */
+        .modal-conteudo {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 520px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+            /* Animação de entrada (escala) */
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        /* Quando ativo, o conteúdo volta ao tamanho normal */
+        .modal-overlay.ativo .modal-conteudo {
+            transform: scale(1);
+        }
+
+        /* Botão de fechar (X) no canto superior direito */
+        .btn-fechar {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .btn-fechar:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        /* Ícone do modal */
+        .modal-icone {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        /* Título do modal */
+        .modal-conteudo h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 24px;
+        }
+
+        /* Texto do modal */
+        .modal-conteudo p {
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        /* Lista de funcionalidades */
+        .modal-conteudo ul {
+            margin: 16px 0;
+            padding-left: 24px;
+            color: #555;
+        }
+
+        .modal-conteudo li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        /* Botões dentro do modal */
+        .modal-acoes {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: center;
+        }
+
+        .btn-confirmar {
+            padding: 12px 28px;
+            background: #667eea;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-confirmar:hover {
+            background: #5a6fd6;
+        }
+
+        .btn-cancelar {
+            padding: 12px 28px;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-cancelar:hover {
+            background: #e0e0e0;
+        }
+
+        /* Informações técnicas abaixo do botão */
+        .info-tecnica {
+            margin-top: 40px;
+            padding: 24px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            max-width: 520px;
+            width: 90%;
+        }
+
+        .info-tecnica h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .info-tecnica ul {
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .info-tecnica li {
+            margin-bottom: 6px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .info-tecnica code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         Conteúdo Principal da Página
+         ============================================ -->
+    <h1>🪟 Janela Modal</h1>
+    <p class="descricao">
+        Clique no botão abaixo para abrir uma janela modal.
+        Você pode fechá-la clicando no "X", no botão "Cancelar",
+        fora do modal ou pressionando a tecla <strong>Esc</strong>.
+    </p>
+
+    <!-- Botão que dispara a abertura do modal -->
+    <button class="btn-abrir-modal" id="btn-abrir">
+        📦 Abrir Modal
+    </button>
+
+    <!-- ============================================
+         Estrutura do Modal
+         ============================================ -->
+    <!-- O overlay cobre toda a tela e centraliza o modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <!-- Conteúdo do modal (a "caixa" branca) -->
+        <div class="modal-conteudo" id="modal-conteudo">
+            <!-- Botão de fechar (X) -->
+            <button class="btn-fechar" id="btn-fechar" aria-label="Fechar modal">
+                &times;
+            </button>
+
+            <!-- Conteúdo interno do modal -->
+            <div class="modal-icone">🎉</div>
+            <h2>Modal Aberto com Sucesso!</h2>
+
+            <p>
+                Este é um exemplo de <strong>janela modal</strong> (também chamada de
+                <em>dialog</em>). Modais são usados para exibir informações importantes,
+                confirmações, formulários ou avisos ao usuário.
+            </p>
+
+            <p>Este modal pode ser fechado de 4 formas diferentes:</p>
+            <ul>
+                <li>🖱️ Clicando no botão <strong>&times;</strong> (fechar)</li>
+                <li>🖱️ Clicando no botão <strong>Cancelar</strong></li>
+                <li>🖱️ Clicando <strong>fora do modal</strong> (no overlay escuro)</li>
+                <li>⌨️ Pressionando a tecla <strong>Escape (Esc)</strong></li>
+            </ul>
+
+            <!-- Botões de ação do modal -->
+            <div class="modal-acoes">
+                <button class="btn-confirmar" id="btn-confirmar">✅ Confirmar</button>
+                <button class="btn-cancelar" id="btn-cancelar">❌ Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informações técnicas sobre o modal -->
+    <div class="info-tecnica">
+        <h3>📖 Conceitos aplicados neste exemplo:</h3>
+        <ul>
+            <li><code>classList.add()</code> e <code>classList.remove()</code> para alternar visibilidade</li>
+            <li><code>addEventListener("click")</code> para detectar cliques</li>
+            <li><code>addEventListener("keydown")</code> para detectar teclas</li>
+            <li><code>event.target</code> para saber qual elemento foi clicado</li>
+            <li><code>event.stopPropagation()</code> para impedir propagação de eventos</li>
+            <li>Transições CSS com <code>opacity</code> e <code>transform</code></li>
+        </ul>
+    </div>
+
+    <!-- ============================================
+         JavaScript — Lógica do Modal
+         ============================================ -->
+    <script>
+        // ============================================
+        // 🪟 Controle da Janela Modal
+        // ============================================
+
+        // === Seleção de elementos ===
+        // querySelector busca o primeiro elemento que corresponde ao seletor CSS
+        const btnAbrir = document.getElementById("btn-abrir");
+        const modalOverlay = document.getElementById("modal-overlay");
+        const modalConteudo = document.getElementById("modal-conteudo");
+        const btnFechar = document.getElementById("btn-fechar");
+        const btnConfirmar = document.getElementById("btn-confirmar");
+        const btnCancelar = document.getElementById("btn-cancelar");
+
+        // === Função para ABRIR o modal ===
+        function abrirModal() {
+            // Adiciona a classe "ativo" que controla a visibilidade via CSS
+            modalOverlay.classList.add("ativo");
+
+            // Impede o scroll da página enquanto o modal está aberto
+            document.body.style.overflow = "hidden";
+        }
+
+        // === Função para FECHAR o modal ===
+        function fecharModal() {
+            // Remove a classe "ativo" para esconder o modal
+            modalOverlay.classList.remove("ativo");
+
+            // Restaura o scroll da página
+            document.body.style.overflow = "";
+        }
+
+        // === 1. Abrir modal ao clicar no botão ===
+        btnAbrir.addEventListener("click", abrirModal);
+
+        // === 2. Fechar ao clicar no botão "X" ===
+        btnFechar.addEventListener("click", fecharModal);
+
+        // === 3. Fechar ao clicar no botão "Cancelar" ===
+        btnCancelar.addEventListener("click", fecharModal);
+
+        // === 4. Fechar ao clicar FORA do modal (no overlay escuro) ===
+        // Quando clicamos no overlay, event.target é o próprio overlay
+        // Quando clicamos no conteúdo do modal, event.target é o conteúdo
+        modalOverlay.addEventListener("click", function(evento) {
+            // Se o clique foi diretamente no overlay (e não no conteúdo)
+            if (evento.target === modalOverlay) {
+                fecharModal();
+            }
+        });
+
+        // === 5. Fechar ao pressionar a tecla Escape ===
+        // keydown detecta quando qualquer tecla é pressionada
+        document.addEventListener("keydown", function(evento) {
+            // evento.key retorna o nome da tecla pressionada
+            if (evento.key === "Escape") {
+                fecharModal();
+            }
+        });
+
+        // === 6. Ação do botão "Confirmar" ===
+        btnConfirmar.addEventListener("click", function() {
+            // Substitui o conteúdo do modal com uma mensagem de confirmação
+            modalConteudo.innerHTML = `
+                <div class="modal-icone">✅</div>
+                <h2>Ação Confirmada!</h2>
+                <p style="text-align:center; color:#666;">
+                    A ação foi executada com sucesso.
+                    O modal fechará automaticamente.
+                </p>
+            `;
+
+            // Fecha o modal automaticamente após 2 segundos
+            // setTimeout executa uma função após o tempo especificado
+            setTimeout(function() {
+                fecharModal();
+
+                // Restaura o conteúdo original do modal após fechar
+                // (Para que ao abrir novamente, volte ao estado original)
+                setTimeout(restaurarModal, 500);
+            }, 2000);
+        });
+
+        // === Função para restaurar o conteúdo original do modal ===
+        function restaurarModal() {
+            modalConteudo.innerHTML = `
+                <button class="btn-fechar" id="btn-fechar" aria-label="Fechar modal">
+                    &times;
+                </button>
+                <div class="modal-icone">🎉</div>
+                <h2>Modal Aberto com Sucesso!</h2>
+                <p>
+                    Este é um exemplo de <strong>janela modal</strong> (também chamada de
+                    <em>dialog</em>). Modais são usados para exibir informações importantes,
+                    confirmações, formulários ou avisos ao usuário.
+                </p>
+                <p>Este modal pode ser fechado de 4 formas diferentes:</p>
+                <ul>
+                    <li>🖱️ Clicando no botão <strong>&times;</strong> (fechar)</li>
+                    <li>🖱️ Clicando no botão <strong>Cancelar</strong></li>
+                    <li>🖱️ Clicando <strong>fora do modal</strong> (no overlay escuro)</li>
+                    <li>⌨️ Pressionando a tecla <strong>Escape (Esc)</strong></li>
+                </ul>
+                <div class="modal-acoes">
+                    <button class="btn-confirmar" id="btn-confirmar">✅ Confirmar</button>
+                    <button class="btn-cancelar" id="btn-cancelar">❌ Cancelar</button>
+                </div>
+            `;
+
+            // Reconecta os event listeners aos botões recriados
+            document.getElementById("btn-fechar").addEventListener("click", fecharModal);
+            document.getElementById("btn-cancelar").addEventListener("click", fecharModal);
+            document.getElementById("btn-confirmar").addEventListener("click", arguments.callee);
+        }
+    </script>
+</body>
+</html>

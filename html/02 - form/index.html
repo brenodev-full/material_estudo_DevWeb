@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<!--
+    ================================================================
+    📝 Projeto 02 — Formulário Completo com Validação Nativa
+    ================================================================
+    Este projeto demonstra a criação de um formulário HTML5 completo,
+    utilizando diversos tipos de input, elementos de seleção e
+    validação nativa do navegador (sem JavaScript).
+
+    Conceitos abordados:
+    - Elemento <form> e seus atributos (action, method, enctype)
+    - Diversos tipos de <input> (text, email, password, tel, number,
+      date, url, color, range, file, radio, checkbox, hidden)
+    - Elementos <select>, <textarea>, <datalist>
+    - Agrupamento com <fieldset> e <legend>
+    - Validação nativa: required, pattern, minlength, maxlength,
+      min, max, placeholder, title
+    - Labels associadas corretamente aos inputs (atributo for/id)
+    - Acessibilidade com aria-describedby
+    - Botões submit e reset
+    ================================================================
+-->
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Cadastro — Demonstração HTML5</title>
+    <meta name="description" content="Exemplo completo de formulário HTML5 com validação nativa, diversos tipos de input e boas práticas de acessibilidade.">
+
+    <!-- Estilo para melhor visualização do formulário -->
+    <style>
+        /* Reset e base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Container do formulário */
+        form {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Fieldset e Legend */
+        fieldset {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        legend {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c3e50;
+            padding: 0 0.5rem;
+        }
+
+        /* Labels */
+        label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+
+        /* Campos de formulário */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="date"],
+        input[type="url"],
+        input[type="search"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+        }
+
+        /* Estado de validação */
+        input:invalid:not(:placeholder-shown) {
+            border-color: #e74c3c;
+        }
+
+        input:valid:not(:placeholder-shown) {
+            border-color: #27ae60;
+        }
+
+        /* Texto de ajuda */
+        .help-text {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: -0.7rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Grupo de radio/checkbox */
+        .option-group {
+            margin-bottom: 1rem;
+        }
+
+        .option-group label {
+            display: inline-flex;
+            align-items: center;
+            font-weight: normal;
+            margin-right: 1.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .option-group input[type="radio"],
+        .option-group input[type="checkbox"] {
+            margin-right: 0.4rem;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Range slider */
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Color picker */
+        input[type="color"] {
+            width: 60px;
+            height: 40px;
+            padding: 2px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* File input */
+        input[type="file"] {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Botões */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.7rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+            color: white;
+            flex: 1;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+        }
+
+        button[type="reset"] {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        button[type="reset"]:hover {
+            background-color: #c0392b;
+        }
+
+        /* Layout de duas colunas para campos curtos */
+        .two-columns {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .two-columns > div {
+            flex: 1;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .two-columns {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📝 Formulário de Cadastro</h1>
+    <p class="subtitle">Exemplo completo com validação nativa do HTML5</p>
+
+    <!--
+        =====================================================
+        FORM — Elemento de Formulário
+        =====================================================
+        Atributos principais:
+        - action: URL para onde os dados serão enviados
+        - method: GET (dados na URL) ou POST (dados no corpo)
+        - enctype: tipo de codificação dos dados
+          * application/x-www-form-urlencoded (padrão)
+          * multipart/form-data (necessário para upload de arquivo)
+        - autocomplete: ativa/desativa preenchimento automático
+        - novalidate: desativa validação nativa (NÃO usado aqui)
+    -->
+    <form action="/api/cadastro" method="POST" enctype="multipart/form-data" autocomplete="on">
+
+        <!--
+            =================================================
+            FIELDSET 1 — Dados Pessoais
+            =================================================
+            <fieldset> agrupa campos relacionados visualmente.
+            <legend> dá um título ao grupo.
+        -->
+        <fieldset>
+            <legend>👤 Dados Pessoais</legend>
+
+            <!--
+                LABEL + INPUT (text)
+                O atributo "for" da label deve ser igual ao "id" do input.
+                Isso permite que clicar na label foque no campo (acessibilidade).
+            -->
+            <label for="nome-completo">Nome Completo: *</label>
+            <input type="text"
+                   id="nome-completo"
+                   name="nome_completo"
+                   placeholder="Ex: Maria da Silva Santos"
+                   required
+                   minlength="3"
+                   maxlength="100"
+                   autocomplete="name"
+                   aria-describedby="nome-help">
+            <p class="help-text" id="nome-help">
+                Mínimo de 3 caracteres. Digite seu nome completo.
+            </p>
+
+            <!-- Layout de duas colunas -->
+            <div class="two-columns">
+                <div>
+                    <!--
+                        INPUT (email)
+                        O tipo "email" já faz validação automática do formato.
+                        O navegador verifica se contém @ e domínio.
+                    -->
+                    <label for="email">E-mail: *</label>
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           placeholder="seu@email.com"
+                           required
+                           autocomplete="email">
+                </div>
+                <div>
+                    <!--
+                        INPUT (tel)
+                        O tipo "tel" abre teclado numérico em dispositivos móveis.
+                        Usamos "pattern" para validar o formato com expressão regular (regex).
+                        O atributo "title" mostra uma dica quando a validação falha.
+                    -->
+                    <label for="telefone">Telefone: *</label>
+                    <input type="tel"
+                           id="telefone"
+                           name="telefone"
+                           placeholder="(11) 99999-9999"
+                           required
+                           pattern="\(\d{2}\)\s?\d{4,5}-\d{4}"
+                           title="Formato esperado: (11) 99999-9999"
+                           autocomplete="tel">
+                    <p class="help-text">Formato: (XX) XXXXX-XXXX</p>
+                </div>
+            </div>
+
+            <div class="two-columns">
+                <div>
+                    <!--
+                        INPUT (date)
+                        O tipo "date" exibe um seletor de calendário nativo.
+                        Aceita os atributos min e max para limitar o intervalo.
+                    -->
+                    <label for="data-nascimento">Data de Nascimento: *</label>
+                    <input type="date"
+                           id="data-nascimento"
+                           name="data_nascimento"
+                           required
+                           min="1920-01-01"
+                           max="2010-12-31"
+                           autocomplete="bday">
+                </div>
+                <div>
+                    <!--
+                        INPUT (number)
+                        O tipo "number" só aceita valores numéricos.
+                        - min: valor mínimo permitido
+                        - max: valor máximo permitido
+                        - step: incremento (padrão é 1)
+                    -->
+                    <label for="idade">Idade:</label>
+                    <input type="number"
+                           id="idade"
+                           name="idade"
+                           placeholder="25"
+                           min="14"
+                           max="120"
+                           step="1">
+                </div>
+            </div>
+
+            <!--
+                INPUT (radio) — Botões de Opção
+                Radio buttons permitem selecionar APENAS UMA opção do grupo.
+                Todos devem ter o mesmo atributo "name" para formar o grupo.
+            -->
+            <label>Gênero:</label>
+            <div class="option-group">
+                <label>
+                    <input type="radio" name="genero" value="masculino">
+                    Masculino
+                </label>
+                <label>
+                    <input type="radio" name="genero" value="feminino">
+                    Feminino
+                </label>
+                <label>
+                    <input type="radio" name="genero" value="outro">
+                    Outro
+                </label>
+                <label>
+                    <input type="radio" name="genero" value="nao-informar">
+                    Prefiro não informar
+                </label>
+            </div>
+        </fieldset>
+
+        <!--
+            =================================================
+            FIELDSET 2 — Dados de Acesso
+            =================================================
+        -->
+        <fieldset>
+            <legend>🔐 Dados de Acesso</legend>
+
+            <!--
+                INPUT (text) para nome de usuário
+                Usamos "pattern" para aceitar apenas letras, números e underscores.
+            -->
+            <label for="usuario">Nome de Usuário: *</label>
+            <input type="text"
+                   id="usuario"
+                   name="usuario"
+                   placeholder="meu_usuario_123"
+                   required
+                   minlength="4"
+                   maxlength="20"
+                   pattern="[a-zA-Z0-9_]+"
+                   title="Apenas letras, números e underscore (_). Mínimo 4 caracteres."
+                   autocomplete="username">
+            <p class="help-text">Apenas letras, números e _ (underscore). De 4 a 20 caracteres.</p>
+
+            <div class="two-columns">
+                <div>
+                    <!--
+                        INPUT (password) — Senha
+                        O tipo "password" oculta os caracteres digitados.
+                        Combinamos minlength, pattern e title para validação robusta.
+                    -->
+                    <label for="senha">Senha: *</label>
+                    <input type="password"
+                           id="senha"
+                           name="senha"
+                           placeholder="••••••••"
+                           required
+                           minlength="8"
+                           maxlength="50"
+                           pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
+                           title="Mínimo 8 caracteres, com pelo menos 1 maiúscula, 1 minúscula e 1 número."
+                           autocomplete="new-password">
+                    <p class="help-text">Mínimo 8 caracteres: 1 maiúscula, 1 minúscula, 1 número.</p>
+                </div>
+                <div>
+                    <!-- Confirmação de senha -->
+                    <label for="confirmar-senha">Confirmar Senha: *</label>
+                    <input type="password"
+                           id="confirmar-senha"
+                           name="confirmar_senha"
+                           placeholder="••••••••"
+                           required
+                           minlength="8"
+                           autocomplete="new-password">
+                </div>
+            </div>
+        </fieldset>
+
+        <!--
+            =================================================
+            FIELDSET 3 — Informações Adicionais
+            =================================================
+        -->
+        <fieldset>
+            <legend>📋 Informações Adicionais</legend>
+
+            <!--
+                INPUT (url) — URL/Website
+                O tipo "url" valida automaticamente o formato de URL.
+                O campo aceita apenas URLs com protocolo (http:// ou https://).
+            -->
+            <label for="website">Website / Portfolio:</label>
+            <input type="url"
+                   id="website"
+                   name="website"
+                   placeholder="https://meusite.com.br"
+                   autocomplete="url">
+            <p class="help-text">Opcional. Inclua o protocolo (https://).</p>
+
+            <!--
+                SELECT — Lista Suspensa (Dropdown)
+                <select> cria um menu de seleção.
+                <optgroup> agrupa opções relacionadas com um rótulo.
+                <option> define cada opção disponível.
+                O atributo "selected" marca a opção padrão.
+                O atributo "disabled" impede a seleção (útil para placeholder).
+            -->
+            <label for="estado">Estado: *</label>
+            <select id="estado" name="estado" required>
+                <option value="" disabled selected>-- Selecione seu estado --</option>
+                <optgroup label="Norte">
+                    <option value="AC">Acre</option>
+                    <option value="AM">Amazonas</option>
+                    <option value="AP">Amapá</option>
+                    <option value="PA">Pará</option>
+                    <option value="RO">Rondônia</option>
+                    <option value="RR">Roraima</option>
+                    <option value="TO">Tocantins</option>
+                </optgroup>
+                <optgroup label="Nordeste">
+                    <option value="AL">Alagoas</option>
+                    <option value="BA">Bahia</option>
+                    <option value="CE">Ceará</option>
+                    <option value="MA">Maranhão</option>
+                    <option value="PB">Paraíba</option>
+                    <option value="PE">Pernambuco</option>
+                    <option value="PI">Piauí</option>
+                    <option value="RN">Rio Grande do Norte</option>
+                    <option value="SE">Sergipe</option>
+                </optgroup>
+                <optgroup label="Centro-Oeste">
+                    <option value="DF">Distrito Federal</option>
+                    <option value="GO">Goiás</option>
+                    <option value="MT">Mato Grosso</option>
+                    <option value="MS">Mato Grosso do Sul</option>
+                </optgroup>
+                <optgroup label="Sudeste">
+                    <option value="ES">Espírito Santo</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="SP">São Paulo</option>
+                </optgroup>
+                <optgroup label="Sul">
+                    <option value="PR">Paraná</option>
+                    <option value="RS">Rio Grande do Sul</option>
+                    <option value="SC">Santa Catarina</option>
+                </optgroup>
+            </select>
+
+            <!--
+                INPUT com DATALIST — Campo com sugestões de preenchimento
+                <datalist> fornece sugestões que aparecem ao digitar,
+                mas diferente do <select>, o usuário pode digitar livremente.
+            -->
+            <label for="profissao">Profissão:</label>
+            <input type="text"
+                   id="profissao"
+                   name="profissao"
+                   placeholder="Digite ou selecione..."
+                   list="lista-profissoes">
+            <datalist id="lista-profissoes">
+                <option value="Desenvolvedor(a) Front-end">
+                <option value="Desenvolvedor(a) Back-end">
+                <option value="Desenvolvedor(a) Full Stack">
+                <option value="Designer UX/UI">
+                <option value="Analista de Dados">
+                <option value="Gerente de Projetos">
+                <option value="DevOps Engineer">
+                <option value="Estudante">
+                <option value="Professor(a)">
+                <option value="Outro">
+            </datalist>
+            <p class="help-text">Digite para ver sugestões ou escreva livremente.</p>
+
+            <!--
+                INPUT (checkbox) — Caixas de Seleção
+                Checkboxes permitem selecionar VÁRIAS opções simultaneamente.
+                Diferente do radio, cada checkbox é independente.
+            -->
+            <label>Áreas de Interesse:</label>
+            <div class="option-group">
+                <label>
+                    <input type="checkbox" name="interesses" value="frontend">
+                    Front-end
+                </label>
+                <label>
+                    <input type="checkbox" name="interesses" value="backend">
+                    Back-end
+                </label>
+                <label>
+                    <input type="checkbox" name="interesses" value="mobile">
+                    Mobile
+                </label>
+                <label>
+                    <input type="checkbox" name="interesses" value="devops">
+                    DevOps
+                </label>
+                <label>
+                    <input type="checkbox" name="interesses" value="data-science">
+                    Data Science
+                </label>
+                <label>
+                    <input type="checkbox" name="interesses" value="ia">
+                    Inteligência Artificial
+                </label>
+            </div>
+
+            <!--
+                INPUT (range) — Controle Deslizante (Slider)
+                Permite selecionar um valor dentro de um intervalo.
+                - min/max: limites do intervalo
+                - step: incremento entre valores
+                - value: valor inicial
+            -->
+            <label for="experiencia">Nível de Experiência: <output id="exp-output">3</output>/5</label>
+            <input type="range"
+                   id="experiencia"
+                   name="experiencia"
+                   min="1"
+                   max="5"
+                   step="1"
+                   value="3"
+                   oninput="document.getElementById('exp-output').value = this.value">
+            <p class="help-text">1 = Iniciante | 3 = Intermediário | 5 = Avançado</p>
+
+            <!--
+                INPUT (color) — Seletor de Cor
+                Abre uma paleta de cores nativa do navegador.
+            -->
+            <label for="cor-favorita">Cor Favorita:</label>
+            <input type="color"
+                   id="cor-favorita"
+                   name="cor_favorita"
+                   value="#3498db">
+
+        </fieldset>
+
+        <!--
+            =================================================
+            FIELDSET 4 — Upload e Mensagem
+            =================================================
+        -->
+        <fieldset>
+            <legend>📎 Upload e Mensagem</legend>
+
+            <!--
+                INPUT (file) — Upload de Arquivo
+                - accept: tipos de arquivo permitidos
+                  * ".jpg,.png,.pdf" (extensões específicas)
+                  * "image/*" (qualquer imagem)
+                  * "application/pdf" (apenas PDF)
+                - multiple: permite selecionar vários arquivos
+
+                IMPORTANTE: O <form> deve ter enctype="multipart/form-data"
+                para que o upload funcione corretamente.
+            -->
+            <label for="foto-perfil">Foto de Perfil:</label>
+            <input type="file"
+                   id="foto-perfil"
+                   name="foto_perfil"
+                   accept="image/png, image/jpeg, image/webp"
+                   aria-describedby="foto-help">
+            <p class="help-text" id="foto-help">
+                Formatos aceitos: PNG, JPEG, WebP. Tamanho máximo recomendado: 5MB.
+            </p>
+
+            <!--
+                TEXTAREA — Área de Texto Multilinha
+                Diferente do <input type="text">, permite textos longos
+                com múltiplas linhas.
+                - rows: número de linhas visíveis
+                - cols: número de colunas (largura em caracteres)
+                - O texto placeholder deve ser informativo
+            -->
+            <label for="sobre-voce">Sobre Você:</label>
+            <textarea id="sobre-voce"
+                      name="sobre_voce"
+                      rows="5"
+                      placeholder="Conte um pouco sobre você, suas experiências e objetivos profissionais..."
+                      maxlength="500"
+                      aria-describedby="sobre-help"></textarea>
+            <p class="help-text" id="sobre-help">
+                Opcional. Máximo de 500 caracteres.
+            </p>
+
+            <!--
+                INPUT (hidden) — Campo Oculto
+                Envia dados que o usuário não precisa ver ou editar.
+                Útil para tokens de segurança, IDs, etc.
+            -->
+            <input type="hidden" name="formulario_origem" value="pagina-cadastro">
+            <input type="hidden" name="versao_form" value="2.0">
+        </fieldset>
+
+        <!--
+            =================================================
+            FIELDSET 5 — Termos e Condições
+            =================================================
+        -->
+        <fieldset>
+            <legend>✅ Termos e Condições</legend>
+
+            <!-- Checkbox obrigatório para aceitar os termos -->
+            <div class="option-group">
+                <label>
+                    <input type="checkbox" name="aceitar_termos" required>
+                    Li e aceito os <a href="#" target="_blank">Termos de Uso</a>
+                    e a <a href="#" target="_blank">Política de Privacidade</a>. *
+                </label>
+            </div>
+
+            <div class="option-group">
+                <label>
+                    <input type="checkbox" name="receber_novidades">
+                    Desejo receber novidades e promoções por e-mail.
+                </label>
+            </div>
+        </fieldset>
+
+        <!--
+            =================================================
+            BOTÕES DE AÇÃO
+            =================================================
+            - type="submit": envia o formulário para o servidor
+            - type="reset": limpa todos os campos do formulário
+            - type="button": botão genérico (para uso com JavaScript)
+        -->
+        <div class="button-group">
+            <button type="submit">✅ Enviar Cadastro</button>
+            <button type="reset">🗑️ Limpar Campos</button>
+        </div>
+
+    </form>
+
+</body>
+</html>

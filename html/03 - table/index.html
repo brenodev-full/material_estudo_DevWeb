@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<!--
+    ================================================================
+    📊 Projeto 03 — Tabelas HTML5 Estruturadas
+    ================================================================
+    Este projeto demonstra como criar tabelas bem estruturadas
+    em HTML5, utilizando todas as tags semânticas disponíveis
+    para organizar dados tabulares.
+
+    Conceitos abordados:
+    - Estrutura completa: <table>, <caption>, <thead>, <tbody>, <tfoot>
+    - Linhas (<tr>) e células (<th>, <td>)
+    - Mesclagem de células: colspan (colunas) e rowspan (linhas)
+    - Acessibilidade com scope e atributos semânticos
+    - Estilização básica com CSS
+
+    ⚠️ IMPORTANTE: Tabelas devem ser usadas APENAS para dados
+    tabulares, NUNCA para layout de página (use CSS Flexbox/Grid).
+    ================================================================
+-->
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabelas HTML5 — Boletim Escolar</title>
+    <meta name="description" content="Exemplo completo de tabelas HTML5 com caption, thead, tbody, tfoot, colspan e rowspan.">
+
+    <!-- Estilização das tabelas -->
+    <style>
+        /* Reset e configuração base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Wrapper para responsividade da tabela */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===========================
+           ESTILIZAÇÃO DAS TABELAS
+           =========================== */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;       /* Remove espaço entre bordas */
+            background-color: white;
+            font-size: 0.95rem;
+        }
+
+        /* Caption — Título da tabela */
+        caption {
+            padding: 1rem;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: white;
+            text-align: left;
+            border-radius: 8px 8px 0 0;
+            caption-side: top;              /* Posição do caption (top ou bottom) */
+        }
+
+        /* Cabeçalho da tabela */
+        thead {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        thead th {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Corpo da tabela */
+        tbody td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Efeito zebra — linhas alternadas com cor de fundo diferente */
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Efeito hover — destaca a linha ao passar o mouse */
+        tbody tr:hover {
+            background-color: #eaf2f8;
+        }
+
+        /* Rodapé da tabela */
+        tfoot {
+            background-color: #ecf0f1;
+            font-weight: bold;
+        }
+
+        tfoot td,
+        tfoot th {
+            padding: 0.8rem 1rem;
+            border-top: 2px solid #2c3e50;
+        }
+
+        /* Classes auxiliares para alinhamento */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        /* Classes para notas (cores indicativas) */
+        .nota-alta {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .nota-media {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .nota-baixa {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        /* Estilo para a segunda tabela (colspan/rowspan) */
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #bdc3c7;
+            padding: 0.7rem 1rem;
+        }
+
+        .table-bordered thead th {
+            border-color: #2c3e50;
+        }
+
+        .merge-highlight {
+            background-color: #ebf5fb !important;
+        }
+
+        /* Notas de rodapé / explicações */
+        .table-note {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* Comentários no código (visual) */
+        .code-comment {
+            background-color: #fef9e7;
+            border-left: 4px solid #f1c40f;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .code-comment strong {
+            color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>📊 Tabelas HTML5 Estruturadas</h1>
+        <p class="page-subtitle">Exemplos práticos com caption, thead, tbody, tfoot, colspan e rowspan</p>
+
+        <!--
+            ==========================================================
+            TABELA 1 — Boletim Escolar (Estrutura Completa)
+            ==========================================================
+            Demonstra a estrutura semântica completa de uma tabela:
+            - <caption>: título descritivo da tabela
+            - <thead>: cabeçalho com rótulos das colunas
+            - <tbody>: corpo com os dados
+            - <tfoot>: rodapé com totais/resumos
+
+            A tag <th> é usada no cabeçalho (ao invés de <td>) porque
+            representa uma célula de CABEÇALHO, não de dados.
+            O atributo "scope" indica se o cabeçalho se refere a uma
+            coluna ("col") ou linha ("row") — importante para acessibilidade.
+        -->
+
+        <h2>1. Boletim Escolar — Estrutura Completa</h2>
+
+        <div class="code-comment">
+            <strong>💡 Conceito:</strong> Uma tabela bem estruturada usa <code>&lt;caption&gt;</code> para o título,
+            <code>&lt;thead&gt;</code> para o cabeçalho, <code>&lt;tbody&gt;</code> para os dados e
+            <code>&lt;tfoot&gt;</code> para o resumo/totais. O atributo <code>scope</code> nas tags
+            <code>&lt;th&gt;</code> melhora a acessibilidade para leitores de tela.
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <!--
+                    CAPTION — Título da Tabela
+                    Fornece um título descritivo para a tabela.
+                    Importante para acessibilidade e SEO.
+                -->
+                <caption>Boletim Escolar — 1º Semestre de 2024 | Turma 9ºA</caption>
+
+                <!--
+                    THEAD — Cabeçalho da Tabela
+                    Contém as linhas de cabeçalho com os rótulos das colunas.
+                    Usa <th> ao invés de <td> para indicar que são cabeçalhos.
+                    scope="col" indica que o cabeçalho se refere à coluna inteira.
+                -->
+                <thead>
+                    <tr>
+                        <th scope="col">Aluno(a)</th>
+                        <th scope="col" class="text-center">Matemática</th>
+                        <th scope="col" class="text-center">Português</th>
+                        <th scope="col" class="text-center">Ciências</th>
+                        <th scope="col" class="text-center">História</th>
+                        <th scope="col" class="text-center">Inglês</th>
+                        <th scope="col" class="text-center">Média</th>
+                        <th scope="col" class="text-center">Situação</th>
+                    </tr>
+                </thead>
+
+                <!--
+                    TBODY — Corpo da Tabela
+                    Contém os dados propriamente ditos.
+                    Cada <tr> é uma linha, e cada <td> é uma célula de dados.
+                    O <th scope="row"> identifica o cabeçalho de cada linha.
+                -->
+                <tbody>
+                    <tr>
+                        <!-- th com scope="row" indica que este é o cabeçalho da LINHA -->
+                        <th scope="row">Ana Clara Silva</th>
+                        <td class="text-center nota-alta">9.5</td>
+                        <td class="text-center nota-alta">8.7</td>
+                        <td class="text-center nota-alta">9.2</td>
+                        <td class="text-center nota-alta">8.8</td>
+                        <td class="text-center nota-alta">9.0</td>
+                        <td class="text-center nota-alta">9.04</td>
+                        <td class="text-center">✅ Aprovada</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Bruno Oliveira Santos</th>
+                        <td class="text-center nota-media">7.2</td>
+                        <td class="text-center nota-media">6.8</td>
+                        <td class="text-center nota-alta">8.0</td>
+                        <td class="text-center nota-media">7.5</td>
+                        <td class="text-center nota-media">7.0</td>
+                        <td class="text-center nota-media">7.30</td>
+                        <td class="text-center">✅ Aprovado</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Camila Rodrigues</th>
+                        <td class="text-center nota-alta">8.0</td>
+                        <td class="text-center nota-alta">9.5</td>
+                        <td class="text-center nota-media">7.8</td>
+                        <td class="text-center nota-alta">9.0</td>
+                        <td class="text-center nota-alta">8.5</td>
+                        <td class="text-center nota-alta">8.56</td>
+                        <td class="text-center">✅ Aprovada</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Daniel Costa Pereira</th>
+                        <td class="text-center nota-media">6.0</td>
+                        <td class="text-center nota-media">5.5</td>
+                        <td class="text-center nota-media">6.2</td>
+                        <td class="text-center nota-media">5.8</td>
+                        <td class="text-center nota-baixa">4.5</td>
+                        <td class="text-center nota-media">5.60</td>
+                        <td class="text-center">⚠️ Recuperação</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Elena Fernandes Lima</th>
+                        <td class="text-center nota-alta">10.0</td>
+                        <td class="text-center nota-alta">9.8</td>
+                        <td class="text-center nota-alta">9.5</td>
+                        <td class="text-center nota-alta">10.0</td>
+                        <td class="text-center nota-alta">9.7</td>
+                        <td class="text-center nota-alta">9.80</td>
+                        <td class="text-center">✅ Aprovada</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Felipe Souza Almeida</th>
+                        <td class="text-center nota-baixa">3.5</td>
+                        <td class="text-center nota-baixa">4.0</td>
+                        <td class="text-center nota-media">5.0</td>
+                        <td class="text-center nota-baixa">3.8</td>
+                        <td class="text-center nota-baixa">4.2</td>
+                        <td class="text-center nota-baixa">4.10</td>
+                        <td class="text-center">❌ Reprovado</td>
+                    </tr>
+                </tbody>
+
+                <!--
+                    TFOOT — Rodapé da Tabela
+                    Contém linhas de resumo, totais ou médias.
+                    Semanticamente, o navegador sabe que estas linhas
+                    são um resumo dos dados do <tbody>.
+                -->
+                <tfoot>
+                    <tr>
+                        <th scope="row">Média da Turma</th>
+                        <td class="text-center">7.37</td>
+                        <td class="text-center">7.38</td>
+                        <td class="text-center">7.62</td>
+                        <td class="text-center">7.48</td>
+                        <td class="text-center">7.15</td>
+                        <td class="text-center">7.40</td>
+                        <td class="text-center">—</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <p class="table-note">
+            * Média mínima para aprovação: 6.0 | Recuperação: 5.0 a 5.9 | Reprovação: abaixo de 5.0
+        </p>
+
+        <!--
+            ==========================================================
+            TABELA 2 — Demonstração de colspan e rowspan
+            ==========================================================
+            - colspan="N": a célula ocupa N COLUNAS horizontalmente
+            - rowspan="N": a célula ocupa N LINHAS verticalmente
+
+            Isso é útil para criar cabeçalhos agrupados ou quando
+            uma informação se aplica a várias linhas/colunas.
+        -->
+
+        <h2>2. Demonstração de <code>colspan</code> e <code>rowspan</code></h2>
+
+        <div class="code-comment">
+            <strong>💡 Conceito:</strong>
+            <code>colspan="N"</code> faz uma célula ocupar N colunas (mescla horizontal).
+            <code>rowspan="N"</code> faz uma célula ocupar N linhas (mescla vertical).
+            Ao usar rowspan, a(s) linha(s) abaixo deve(m) ter uma célula a menos naquela posição.
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table-bordered">
+                <caption>Grade de Horários — Turma 9ºA (Segunda a Quarta)</caption>
+
+                <thead>
+                    <tr>
+                        <th scope="col">Horário</th>
+                        <!--
+                            colspan="3" — Esta célula ocupa 3 COLUNAS
+                            Cria um cabeçalho que abrange Segunda, Terça e Quarta
+                        -->
+                        <th scope="col" colspan="3" class="text-center">
+                            Dias da Semana
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="col">⏰</th>
+                        <th scope="col" class="text-center">Segunda</th>
+                        <th scope="col" class="text-center">Terça</th>
+                        <th scope="col" class="text-center">Quarta</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <th scope="row">07:30 — 08:20</th>
+                        <!--
+                            rowspan="2" — Esta célula ocupa 2 LINHAS
+                            Matemática é uma aula dupla na segunda-feira,
+                            então a próxima linha NÃO terá célula para a coluna "Segunda"
+                        -->
+                        <td rowspan="2" class="text-center merge-highlight">
+                            📐 Matemática<br>
+                            <small>(Aula dupla)</small>
+                        </td>
+                        <td class="text-center">📝 Português</td>
+                        <td class="text-center">🔬 Ciências</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">08:20 — 09:10</th>
+                        <!-- Não há célula para Segunda aqui (ocupada pelo rowspan acima) -->
+                        <td class="text-center">📝 Português</td>
+                        <td class="text-center">🔬 Ciências</td>
+                    </tr>
+                    <tr>
+                        <!--
+                            colspan="4" — Esta célula ocupa TODAS as 4 colunas
+                            Representa o intervalo que vale para todos os dias
+                        -->
+                        <td colspan="4" class="text-center" style="background-color: #fef9e7; font-style: italic;">
+                            ☕ Intervalo — 09:10 às 09:30
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">09:30 — 10:20</th>
+                        <td class="text-center">📖 História</td>
+                        <td rowspan="2" class="text-center merge-highlight">
+                            🌍 Geografia<br>
+                            <small>(Aula dupla)</small>
+                        </td>
+                        <td class="text-center">🎨 Artes</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">10:20 — 11:10</th>
+                        <td class="text-center">📖 História</td>
+                        <!-- Não há célula para Terça aqui (ocupada pelo rowspan acima) -->
+                        <td class="text-center">🇬🇧 Inglês</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">11:10 — 12:00</th>
+                        <td class="text-center">🏃 Ed. Física</td>
+                        <td class="text-center">📐 Matemática</td>
+                        <td class="text-center">📝 Português</td>
+                    </tr>
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <!--
+                            colspan="4" no rodapé para uma nota que abrange toda a tabela
+                        -->
+                        <td colspan="4" class="text-center" style="font-size: 0.85rem;">
+                            📌 Aulas duplas estão destacadas em azul claro. Grade sujeita a alterações.
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!--
+            ==========================================================
+            TABELA 3 — Exemplo com rowspan e colspan combinados
+            ==========================================================
+            Demonstração mais avançada combinando ambos os atributos
+            de mesclagem em uma tabela de dados de vendas.
+        -->
+
+        <h2>3. Exemplo Avançado — colspan e rowspan combinados</h2>
+
+        <div class="code-comment">
+            <strong>💡 Conceito:</strong> É possível combinar <code>colspan</code> e <code>rowspan</code>
+            na mesma tabela (e até na mesma célula) para criar estruturas complexas. A chave é contar
+            corretamente quantas células cada linha precisa ter, descontando as ocupadas por merges.
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table-bordered">
+                <caption>Relatório de Vendas por Região — 2024</caption>
+
+                <thead>
+                    <tr>
+                        <!--
+                            rowspan="2" — O cabeçalho "Região" ocupa 2 linhas do thead
+                            porque a segunda linha divide os trimestres
+                        -->
+                        <th rowspan="2" scope="col">Região</th>
+
+                        <!--
+                            colspan="2" — Agrupa os dois trimestres do 1º Semestre
+                        -->
+                        <th colspan="2" scope="colgroup" class="text-center">1º Semestre</th>
+
+                        <!--
+                            colspan="2" — Agrupa os dois trimestres do 2º Semestre
+                        -->
+                        <th colspan="2" scope="colgroup" class="text-center">2º Semestre</th>
+
+                        <!-- rowspan="2" — "Total Anual" ocupa 2 linhas -->
+                        <th rowspan="2" scope="col" class="text-center">Total Anual</th>
+                    </tr>
+                    <tr>
+                        <!-- Não há célula para "Região" nem "Total Anual" (rowspan acima) -->
+                        <th scope="col" class="text-center">1º Tri</th>
+                        <th scope="col" class="text-center">2º Tri</th>
+                        <th scope="col" class="text-center">3º Tri</th>
+                        <th scope="col" class="text-center">4º Tri</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <th scope="row">Sudeste</th>
+                        <td class="text-right">R$ 450.000</td>
+                        <td class="text-right">R$ 520.000</td>
+                        <td class="text-right">R$ 480.000</td>
+                        <td class="text-right">R$ 610.000</td>
+                        <td class="text-right nota-alta">R$ 2.060.000</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Sul</th>
+                        <td class="text-right">R$ 280.000</td>
+                        <td class="text-right">R$ 310.000</td>
+                        <td class="text-right">R$ 295.000</td>
+                        <td class="text-right">R$ 340.000</td>
+                        <td class="text-right">R$ 1.225.000</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nordeste</th>
+                        <td class="text-right">R$ 190.000</td>
+                        <td class="text-right">R$ 210.000</td>
+                        <td class="text-right">R$ 225.000</td>
+                        <td class="text-right">R$ 250.000</td>
+                        <td class="text-right">R$ 875.000</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Norte</th>
+                        <td class="text-right">R$ 120.000</td>
+                        <td class="text-right">R$ 135.000</td>
+                        <td class="text-right">R$ 140.000</td>
+                        <td class="text-right">R$ 155.000</td>
+                        <td class="text-right">R$ 550.000</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Centro-Oeste</th>
+                        <td class="text-right">R$ 160.000</td>
+                        <td class="text-right">R$ 175.000</td>
+                        <td class="text-right">R$ 180.000</td>
+                        <td class="text-right">R$ 195.000</td>
+                        <td class="text-right">R$ 710.000</td>
+                    </tr>
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th scope="row">Total Nacional</th>
+                        <td class="text-right">R$ 1.200.000</td>
+                        <td class="text-right">R$ 1.350.000</td>
+                        <td class="text-right">R$ 1.320.000</td>
+                        <td class="text-right">R$ 1.550.000</td>
+                        <td class="text-right nota-alta">R$ 5.420.000</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <p class="table-note">
+            * Valores fictícios para fins didáticos. Os dados não representam nenhuma empresa real.
+        </p>
+
+        <!--
+            ==========================================================
+            RESUMO — Principais Tags e Atributos de Tabela
+            ==========================================================
+        -->
+
+        <h2>📝 Resumo — Tags e Atributos de Tabela</h2>
+
+        <div class="table-wrapper">
+            <table class="table-bordered">
+                <caption>Referência Rápida — Elementos de Tabela HTML5</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Tag / Atributo</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Exemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&lt;table&gt;</code></td>
+                        <td>Define a tabela</td>
+                        <td><code>&lt;table&gt;...&lt;/table&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;caption&gt;</code></td>
+                        <td>Título/legenda da tabela</td>
+                        <td><code>&lt;caption&gt;Notas 2024&lt;/caption&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;thead&gt;</code></td>
+                        <td>Agrupa linhas de cabeçalho</td>
+                        <td>Contém <code>&lt;tr&gt;</code> com <code>&lt;th&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;tbody&gt;</code></td>
+                        <td>Agrupa linhas de dados</td>
+                        <td>Contém <code>&lt;tr&gt;</code> com <code>&lt;td&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;tfoot&gt;</code></td>
+                        <td>Agrupa linhas de resumo/totais</td>
+                        <td>Média, total, etc.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;tr&gt;</code></td>
+                        <td>Define uma linha (table row)</td>
+                        <td><code>&lt;tr&gt;&lt;td&gt;...&lt;/td&gt;&lt;/tr&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;th&gt;</code></td>
+                        <td>Célula de cabeçalho (negrito)</td>
+                        <td><code>&lt;th scope="col"&gt;Nome&lt;/th&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;td&gt;</code></td>
+                        <td>Célula de dados</td>
+                        <td><code>&lt;td&gt;Maria&lt;/td&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>colspan="N"</code></td>
+                        <td>Célula ocupa N colunas</td>
+                        <td><code>&lt;td colspan="3"&gt;...&lt;/td&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>rowspan="N"</code></td>
+                        <td>Célula ocupa N linhas</td>
+                        <td><code>&lt;td rowspan="2"&gt;...&lt;/td&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>scope</code></td>
+                        <td>Indica direção do cabeçalho</td>
+                        <td><code>"col"</code>, <code>"row"</code>, <code>"colgroup"</code>, <code>"rowgroup"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div><!-- Fim do .container -->
+
+</body>
+</html>

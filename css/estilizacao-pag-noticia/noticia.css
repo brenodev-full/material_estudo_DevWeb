@@ -1,0 +1,1001 @@
+/* ==========================================================================
+   ESTILIZAÇÃO DE PÁGINA DE NOTÍCIA / ARTIGO — CSS RESPONSIVO
+   ==========================================================================
+   Este arquivo demonstra como estilizar uma página de notícias ou blog
+   completa, incluindo header, navegação, conteúdo do artigo, sidebar, e
+   footer. O layout é totalmente responsivo usando Flexbox e Media Queries.
+
+   Estrutura esperada do HTML:
+   <body>
+       <header class="cabecalho">
+           <nav class="nav-principal"> ... </nav>
+       </header>
+       <main class="conteudo-principal">
+           <article class="artigo"> ... </article>
+           <aside class="barra-lateral"> ... </aside>
+       </main>
+       <footer class="rodape"> ... </footer>
+   </body>
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. RESET E VARIÁVEIS
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* -----------------------------------------------------------------------
+       Paleta de Cores — Baseada em tons sóbrios e profissionais, ideais
+       para sites de notícias que priorizam legibilidade.
+       ----------------------------------------------------------------------- */
+    --cor-primaria: #1a56db;
+    --cor-primaria-escura: #1e3a5f;
+    --cor-primaria-clara: #e8f0fe;
+    --cor-acento: #dc2626;
+
+    /* Cores de texto */
+    --cor-texto-principal: #1f2937;
+    --cor-texto-secundario: #6b7280;
+    --cor-texto-invertido: #ffffff;
+
+    /* Cores de fundo */
+    --cor-fundo-pagina: #f3f4f6;
+    --cor-fundo-branco: #ffffff;
+    --cor-fundo-escuro: #111827;
+
+    /* Bordas e separadores */
+    --cor-borda: #e5e7eb;
+    --cor-separador: #d1d5db;
+
+    /* Tipografia */
+    --fonte-corpo: 'Georgia', 'Times New Roman', serif;
+    --fonte-titulo: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    --fonte-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+    /* Espaçamentos */
+    --espaco-xs: 4px;
+    --espaco-sm: 8px;
+    --espaco-md: 16px;
+    --espaco-lg: 24px;
+    --espaco-xl: 32px;
+    --espaco-2xl: 48px;
+    --espaco-3xl: 64px;
+
+    /* Layout */
+    --largura-maxima: 1200px;
+    --largura-conteudo: 780px;
+    --largura-sidebar: 320px;
+
+    /* Sombras */
+    --sombra-suave: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --sombra-media: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --sombra-forte: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    /* Transições */
+    --transicao: all 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Estilos base do body
+   -------------------------------------------------------------------------- */
+body {
+    font-family: var(--fonte-corpo);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--cor-texto-principal);
+    background-color: var(--cor-fundo-pagina);
+}
+
+
+/* ==========================================================================
+   2. HEADER E NAVEGAÇÃO
+   ==========================================================================
+   O header contém a barra de navegação principal do site. Usamos Flexbox
+   para alinhar o logo e os links de forma horizontal, com espaçamento
+   automático entre eles (space-between).
+   ========================================================================== */
+
+.cabecalho {
+    background-color: var(--cor-fundo-escuro);
+    box-shadow: var(--sombra-media);
+    position: sticky;                         /* Fica fixo ao rolar */
+    top: 0;
+    z-index: 100;                             /* Acima de todo o conteúdo */
+}
+
+/* --------------------------------------------------------------------------
+   2.1. Navegação principal — Layout horizontal com Flexbox
+   -------------------------------------------------------------------------- */
+.nav-principal {
+    display: flex;
+    justify-content: space-between;           /* Logo à esquerda, menu à direita */
+    align-items: center;
+    max-width: var(--largura-maxima);
+    margin: 0 auto;
+    padding: 0 var(--espaco-lg);
+    height: 64px;
+}
+
+/* --------------------------------------------------------------------------
+   2.2. Logo do site
+   -------------------------------------------------------------------------- */
+.nav-logo {
+    font-family: var(--fonte-titulo);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--cor-texto-invertido);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.nav-logo:hover {
+    color: var(--cor-primaria);
+    transition: var(--transicao);
+}
+
+/* Destaque colorido no nome do logo (ex: "Notícias<span>BR</span>") */
+.nav-logo span {
+    color: var(--cor-acento);
+}
+
+/* --------------------------------------------------------------------------
+   2.3. Menu de navegação — Lista de links horizontal
+   -------------------------------------------------------------------------- */
+.nav-menu {
+    display: flex;
+    list-style: none;                         /* Remove os marcadores da lista */
+    gap: var(--espaco-xs);
+}
+
+.nav-menu a {
+    display: block;
+    padding: var(--espaco-sm) var(--espaco-md);
+    color: var(--cor-texto-invertido);
+    text-decoration: none;
+    font-family: var(--fonte-titulo);
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: var(--transicao);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--cor-primaria);
+}
+
+/* Link ativo — indica a página atual */
+.nav-menu a.ativo {
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-invertido);
+}
+
+/* --------------------------------------------------------------------------
+   2.4. Botão do menu mobile (hambúrguer) — visível apenas em telas pequenas
+   -------------------------------------------------------------------------- */
+.nav-toggle {
+    display: none;                            /* Oculto por padrão (desktop) */
+    background: none;
+    border: none;
+    color: var(--cor-texto-invertido);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: var(--espaco-sm);
+}
+
+
+/* ==========================================================================
+   3. ÁREA DE CONTEÚDO PRINCIPAL (ARTIGO + SIDEBAR)
+   ==========================================================================
+   O layout principal usa Flexbox para posicionar o artigo e a sidebar
+   lado a lado no desktop, com o artigo ocupando mais espaço.
+   ========================================================================== */
+
+.conteudo-principal {
+    display: flex;
+    gap: var(--espaco-xl);
+    max-width: var(--largura-maxima);
+    margin: var(--espaco-xl) auto;
+    padding: 0 var(--espaco-lg);
+}
+
+
+/* ==========================================================================
+   4. ARTIGO — TIPOGRAFIA E LAYOUT
+   ==========================================================================
+   O artigo é a estrela da página. Investimos em tipografia limpa, ritmo
+   vertical consistente e elementos visuais como blockquotes e imagens.
+   ========================================================================== */
+
+.artigo {
+    flex: 1;                                  /* Ocupa o espaço restante */
+    min-width: 0;                             /* Evita overflow com Flexbox */
+    background-color: var(--cor-fundo-branco);
+    border-radius: 12px;
+    padding: var(--espaco-2xl);
+    box-shadow: var(--sombra-suave);
+}
+
+/* --------------------------------------------------------------------------
+   4.1. Cabeçalho do artigo — Categoria, título, metadados
+   -------------------------------------------------------------------------- */
+.artigo-header {
+    margin-bottom: var(--espaco-xl);
+    padding-bottom: var(--espaco-lg);
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+/* Etiqueta de categoria (ex: "Tecnologia", "Esportes") */
+.artigo-categoria {
+    display: inline-block;
+    padding: var(--espaco-xs) var(--espaco-md);
+    background-color: var(--cor-acento);
+    color: var(--cor-texto-invertido);
+    font-family: var(--fonte-titulo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    margin-bottom: var(--espaco-md);
+}
+
+/* --------------------------------------------------------------------------
+   4.2. Títulos do artigo
+   -------------------------------------------------------------------------- */
+.artigo-titulo {
+    font-family: var(--fonte-titulo);
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--cor-texto-principal);
+    margin-bottom: var(--espaco-md);
+    letter-spacing: -0.5px;
+}
+
+/* Subtítulo (h2 dentro do artigo) */
+.artigo h2 {
+    font-family: var(--fonte-titulo);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--cor-texto-principal);
+    margin-top: var(--espaco-2xl);
+    margin-bottom: var(--espaco-md);
+    padding-bottom: var(--espaco-sm);
+    border-bottom: 2px solid var(--cor-primaria);
+}
+
+/* Subtítulo menor (h3 dentro do artigo) */
+.artigo h3 {
+    font-family: var(--fonte-titulo);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--cor-texto-principal);
+    margin-top: var(--espaco-xl);
+    margin-bottom: var(--espaco-sm);
+}
+
+/* --------------------------------------------------------------------------
+   4.3. Metadados — Autor, data, tempo de leitura
+   -------------------------------------------------------------------------- */
+.artigo-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espaco-md);
+    color: var(--cor-texto-secundario);
+    font-family: var(--fonte-titulo);
+    font-size: 0.875rem;
+}
+
+.artigo-meta .autor {
+    font-weight: 600;
+    color: var(--cor-primaria);
+}
+
+/* Separador visual entre metadados (•) */
+.artigo-meta .separador {
+    color: var(--cor-separador);
+}
+
+/* --------------------------------------------------------------------------
+   4.4. Parágrafos — Tipografia otimizada para leitura
+   --------------------------------------------------------------------------
+   Usamos fonte serifada (Georgia) que é considerada ideal para leitura
+   de textos longos, com line-height generoso para melhor legibilidade.
+   -------------------------------------------------------------------------- */
+.artigo p {
+    margin-bottom: var(--espaco-lg);
+    text-align: justify;
+    hyphens: auto;                            /* Hifenização automática */
+}
+
+/* Primeiro parágrafo com a primeira letra maior (drop cap) */
+.artigo p:first-of-type::first-letter {
+    font-size: 3.5rem;
+    font-weight: bold;
+    float: left;
+    line-height: 1;
+    margin-right: var(--espaco-sm);
+    margin-top: var(--espaco-xs);
+    color: var(--cor-primaria-escura);
+}
+
+/* --------------------------------------------------------------------------
+   4.5. Blockquotes — Citações em destaque
+   -------------------------------------------------------------------------- */
+.artigo blockquote {
+    margin: var(--espaco-xl) 0;
+    padding: var(--espaco-lg) var(--espaco-xl);
+    border-left: 4px solid var(--cor-primaria);
+    background-color: var(--cor-primaria-clara);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--cor-primaria-escura);
+    position: relative;
+}
+
+/* Aspas decorativas no blockquote */
+.artigo blockquote::before {
+    content: "\201C";                         /* Aspas tipográficas " */
+    font-size: 4rem;
+    color: var(--cor-primaria);
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    line-height: 1;
+    opacity: 0.3;
+}
+
+.artigo blockquote p {
+    margin-bottom: 0;
+}
+
+/* Fonte da citação */
+.artigo blockquote cite {
+    display: block;
+    margin-top: var(--espaco-sm);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--cor-texto-secundario);
+}
+
+/* --------------------------------------------------------------------------
+   4.6. Imagens dentro do artigo
+   -------------------------------------------------------------------------- */
+.artigo img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: var(--espaco-lg) 0;
+    box-shadow: var(--sombra-media);
+}
+
+.artigo figure {
+    margin: var(--espaco-xl) 0;
+}
+
+.artigo figcaption {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--cor-texto-secundario);
+    font-style: italic;
+    margin-top: var(--espaco-sm);
+}
+
+/* --------------------------------------------------------------------------
+   4.7. Listas dentro do artigo
+   -------------------------------------------------------------------------- */
+.artigo ul,
+.artigo ol {
+    margin-bottom: var(--espaco-lg);
+    padding-left: var(--espaco-xl);
+}
+
+.artigo li {
+    margin-bottom: var(--espaco-sm);
+}
+
+.artigo li::marker {
+    color: var(--cor-primaria);
+}
+
+/* --------------------------------------------------------------------------
+   4.8. Links dentro do artigo
+   -------------------------------------------------------------------------- */
+.artigo a {
+    color: var(--cor-primaria);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: var(--transicao);
+}
+
+.artigo a:hover {
+    color: var(--cor-primaria-escura);
+    text-decoration-thickness: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   4.9. Código inline e blocos de código
+   -------------------------------------------------------------------------- */
+.artigo code {
+    font-family: var(--fonte-mono);
+    font-size: 0.9em;
+    padding: 2px 6px;
+    background-color: #f1f5f9;
+    border: 1px solid var(--cor-borda);
+    border-radius: 4px;
+    color: #be185d;
+}
+
+.artigo pre {
+    background-color: var(--cor-fundo-escuro);
+    color: #e2e8f0;
+    padding: var(--espaco-lg);
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: var(--espaco-lg);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.artigo pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   4.10. Linha separadora
+   -------------------------------------------------------------------------- */
+.artigo hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--cor-separador), transparent);
+    margin: var(--espaco-2xl) 0;
+}
+
+/* --------------------------------------------------------------------------
+   4.11. Tags / Palavras-chave do artigo
+   -------------------------------------------------------------------------- */
+.artigo-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espaco-sm);
+    margin-top: var(--espaco-xl);
+    padding-top: var(--espaco-lg);
+    border-top: 1px solid var(--cor-borda);
+}
+
+.artigo-tags a {
+    display: inline-block;
+    padding: var(--espaco-xs) var(--espaco-md);
+    background-color: var(--cor-fundo-pagina);
+    color: var(--cor-texto-secundario);
+    font-family: var(--fonte-titulo);
+    font-size: 0.8rem;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: var(--transicao);
+}
+
+.artigo-tags a:hover {
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-invertido);
+}
+
+
+/* ==========================================================================
+   5. SIDEBAR (BARRA LATERAL)
+   ==========================================================================
+   A sidebar contém widgets como artigos relacionados, busca, newsletter,
+   e categorias. Cada widget é um card separado.
+   ========================================================================== */
+
+.barra-lateral {
+    width: var(--largura-sidebar);
+    flex-shrink: 0;                           /* Não encolhe */
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-lg);
+}
+
+/* --------------------------------------------------------------------------
+   5.1. Widget (bloco genérico da sidebar)
+   -------------------------------------------------------------------------- */
+.widget {
+    background-color: var(--cor-fundo-branco);
+    border-radius: 12px;
+    padding: var(--espaco-lg);
+    box-shadow: var(--sombra-suave);
+}
+
+.widget-titulo {
+    font-family: var(--fonte-titulo);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cor-texto-principal);
+    margin-bottom: var(--espaco-md);
+    padding-bottom: var(--espaco-sm);
+    border-bottom: 2px solid var(--cor-acento);
+}
+
+/* --------------------------------------------------------------------------
+   5.2. Widget — Artigos populares / Mais lidas
+   -------------------------------------------------------------------------- */
+.widget-noticias-item {
+    display: flex;
+    gap: var(--espaco-md);
+    padding: var(--espaco-sm) 0;
+    border-bottom: 1px solid var(--cor-borda);
+    transition: var(--transicao);
+}
+
+.widget-noticias-item:last-child {
+    border-bottom: none;
+}
+
+.widget-noticias-item:hover {
+    background-color: var(--cor-fundo-pagina);
+    border-radius: 6px;
+    padding-left: var(--espaco-sm);
+}
+
+.widget-noticias-item .numero {
+    font-family: var(--fonte-titulo);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--cor-acento);
+    line-height: 1;
+    min-width: 30px;
+}
+
+.widget-noticias-item h4 {
+    font-family: var(--fonte-titulo);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--cor-texto-principal);
+}
+
+.widget-noticias-item h4 a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transicao);
+}
+
+.widget-noticias-item h4 a:hover {
+    color: var(--cor-primaria);
+}
+
+.widget-noticias-item .meta-info {
+    font-size: 0.75rem;
+    color: var(--cor-texto-secundario);
+    margin-top: var(--espaco-xs);
+}
+
+/* --------------------------------------------------------------------------
+   5.3. Widget — Lista de categorias
+   -------------------------------------------------------------------------- */
+.widget-categorias {
+    list-style: none;
+}
+
+.widget-categorias li {
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.widget-categorias li:last-child {
+    border-bottom: none;
+}
+
+.widget-categorias a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--espaco-sm) 0;
+    text-decoration: none;
+    color: var(--cor-texto-principal);
+    font-family: var(--fonte-titulo);
+    font-size: 0.9rem;
+    transition: var(--transicao);
+}
+
+.widget-categorias a:hover {
+    color: var(--cor-primaria);
+    padding-left: var(--espaco-sm);
+}
+
+/* Badge com contagem de artigos */
+.widget-categorias .contagem {
+    background-color: var(--cor-fundo-pagina);
+    color: var(--cor-texto-secundario);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   5.4. Widget — Newsletter (cadastro de e-mail)
+   -------------------------------------------------------------------------- */
+.widget-newsletter p {
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
+    margin-bottom: var(--espaco-md);
+}
+
+.widget-newsletter input[type="email"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: var(--espaco-sm);
+    outline: none;
+    transition: var(--transicao);
+}
+
+.widget-newsletter input[type="email"]:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.2);
+}
+
+.widget-newsletter button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--cor-acento);
+    color: var(--cor-texto-invertido);
+    border: none;
+    border-radius: 6px;
+    font-family: var(--fonte-titulo);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transicao);
+}
+
+.widget-newsletter button:hover {
+    background-color: #b91c1c;
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================================================
+   6. FOOTER (RODAPÉ)
+   ==========================================================================
+   O rodapé possui informações do site, links rápidos, contato e copyright.
+   Usa Grid Layout para organizar as colunas no desktop.
+   ========================================================================== */
+
+.rodape {
+    background-color: var(--cor-fundo-escuro);
+    color: #9ca3af;
+    margin-top: var(--espaco-3xl);
+}
+
+/* --------------------------------------------------------------------------
+   6.1. Conteúdo principal do rodapé — Grid de colunas
+   -------------------------------------------------------------------------- */
+.rodape-conteudo {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--espaco-xl);
+    max-width: var(--largura-maxima);
+    margin: 0 auto;
+    padding: var(--espaco-3xl) var(--espaco-lg) var(--espaco-xl);
+}
+
+.rodape-secao h3 {
+    font-family: var(--fonte-titulo);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cor-texto-invertido);
+    margin-bottom: var(--espaco-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rodape-secao p {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    margin-bottom: var(--espaco-md);
+}
+
+/* Links do rodapé */
+.rodape-links {
+    list-style: none;
+}
+
+.rodape-links li {
+    margin-bottom: var(--espaco-sm);
+}
+
+.rodape-links a {
+    color: #9ca3af;
+    text-decoration: none;
+    font-family: var(--fonte-titulo);
+    font-size: 0.875rem;
+    transition: var(--transicao);
+}
+
+.rodape-links a:hover {
+    color: var(--cor-texto-invertido);
+    padding-left: var(--espaco-xs);
+}
+
+/* --------------------------------------------------------------------------
+   6.2. Barra inferior — Copyright e redes sociais
+   -------------------------------------------------------------------------- */
+.rodape-inferior {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--largura-maxima);
+    margin: 0 auto;
+    padding: var(--espaco-lg);
+    border-top: 1px solid #374151;
+    font-size: 0.8rem;
+}
+
+.redes-sociais {
+    display: flex;
+    gap: var(--espaco-md);
+}
+
+.redes-sociais a {
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: var(--transicao);
+}
+
+.redes-sociais a:hover {
+    color: var(--cor-texto-invertido);
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================================================
+   7. MEDIA QUERIES — DESIGN RESPONSIVO
+   ==========================================================================
+   Usamos a abordagem "desktop-first" aqui: os estilos base são para desktop
+   e adicionamos ajustes para telas menores.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   7.1. TABLET (até 1024px)
+   --------------------------------------------------------------------------
+   A sidebar vai para baixo do artigo, o grid do footer reduz para 2 colunas.
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+    /* O layout principal muda de lado-a-lado para coluna (empilhado) */
+    .conteudo-principal {
+        flex-direction: column;
+    }
+
+    /* A sidebar ocupa toda a largura abaixo do artigo */
+    .barra-lateral {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    /* Cada widget ocupa metade da largura */
+    .widget {
+        flex: 1 1 calc(50% - var(--espaco-lg));
+        min-width: 280px;
+    }
+
+    /* Footer com 2 colunas */
+    .rodape-conteudo {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7.2. MOBILE (até 768px)
+   --------------------------------------------------------------------------
+   Layout totalmente empilhado, menu hambúrguer, fonte reduzida.
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    /* Reduz o tamanho da fonte base */
+    body {
+        font-size: 16px;
+    }
+
+    /* ---------- NAVEGAÇÃO MOBILE ---------- */
+    /* Mostra o botão hambúrguer */
+    .nav-toggle {
+        display: block;
+    }
+
+    /* O menu vira uma coluna vertical oculta por padrão */
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background-color: var(--cor-fundo-escuro);
+        padding: var(--espaco-md);
+        border-top: 1px solid #374151;
+        box-shadow: var(--sombra-forte);
+    }
+
+    /* Quando o menu está aberto (classe via JavaScript) */
+    .nav-menu.aberto {
+        display: flex;
+    }
+
+    .nav-menu a {
+        padding: var(--espaco-md);
+        border-radius: 0;
+        border-bottom: 1px solid #374151;
+    }
+
+    .nav-menu li:last-child a {
+        border-bottom: none;
+    }
+
+    /* ---------- ARTIGO MOBILE ---------- */
+    .artigo {
+        padding: var(--espaco-lg);
+        border-radius: 0;
+    }
+
+    .artigo-titulo {
+        font-size: 1.5rem;
+    }
+
+    .artigo h2 {
+        font-size: 1.25rem;
+    }
+
+    /* Metadados empilhados no mobile */
+    .artigo-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--espaco-xs);
+    }
+
+    .artigo-meta .separador {
+        display: none;
+    }
+
+    /* Drop cap menor no mobile */
+    .artigo p:first-of-type::first-letter {
+        font-size: 2.5rem;
+    }
+
+    /* Blockquote com menos padding */
+    .artigo blockquote {
+        padding: var(--espaco-md) var(--espaco-lg);
+        margin: var(--espaco-lg) 0;
+    }
+
+    /* ---------- SIDEBAR MOBILE ---------- */
+    .barra-lateral {
+        flex-direction: column;
+    }
+
+    .widget {
+        min-width: 100%;
+    }
+
+    /* ---------- FOOTER MOBILE ---------- */
+    .rodape-conteudo {
+        grid-template-columns: 1fr;
+        padding: var(--espaco-xl) var(--espaco-lg);
+    }
+
+    .rodape-inferior {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--espaco-md);
+    }
+
+    /* Sem padding horizontal no conteúdo principal */
+    .conteudo-principal {
+        padding: 0;
+        gap: var(--espaco-md);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7.3. MOBILE PEQUENO (até 480px)
+   --------------------------------------------------------------------------
+   Ajustes finais para telas muito pequenas (celulares antigos).
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+    .artigo {
+        padding: var(--espaco-md);
+    }
+
+    .artigo-titulo {
+        font-size: 1.3rem;
+    }
+
+    .artigo-tags a {
+        font-size: 0.7rem;
+    }
+
+    .widget {
+        padding: var(--espaco-md);
+    }
+}
+
+
+/* ==========================================================================
+   8. UTILIDADES EXTRAS
+   ========================================================================== */
+
+/* Botão "Voltar ao topo" — posição fixa no canto inferior direito */
+.btn-topo {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-invertido);
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: var(--sombra-media);
+    transition: var(--transicao);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-topo:hover {
+    background-color: var(--cor-primaria-escura);
+    transform: translateY(-3px);
+    box-shadow: var(--sombra-forte);
+}
+
+/* Animação de entrada suave para o artigo */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.artigo {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Skeleton loading — enquanto o conteúdo carrega */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}

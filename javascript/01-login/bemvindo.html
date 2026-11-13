@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo — Login Bem-sucedido</title>
+    <style>
+        /* Reset e estilos globais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Card de boas-vindas */
+        .bemvindo-container {
+            background: #fff;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .icone-sucesso {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .bemvindo-container h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .bemvindo-container p {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Nome do usuário destacado */
+        #nome-usuario {
+            color: #11998e;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* Data e hora de acesso */
+        .info-acesso {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f0fdf4;
+            border-radius: 8px;
+            border-left: 4px solid #38ef7d;
+        }
+
+        .info-acesso p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        /* Botão de logout */
+        .btn-logout {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 12px 32px;
+            background: #e74c3c;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.1s ease;
+        }
+
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+
+        .btn-logout:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         Página de Boas-Vindas (Após Login Bem-Sucedido)
+         ============================================ -->
+    <div class="bemvindo-container">
+        <div class="icone-sucesso">✅</div>
+        <h1>Bem-vindo(a)!</h1>
+        <p>Olá, <span id="nome-usuario">Usuário</span>!</p>
+        <p>Seu login foi realizado com sucesso.</p>
+
+        <!-- Informações sobre o acesso -->
+        <div class="info-acesso">
+            <p>📅 Data de acesso: <strong id="data-acesso">—</strong></p>
+            <p>🕐 Hora de acesso: <strong id="hora-acesso">—</strong></p>
+        </div>
+
+        <!-- Link para "logout" — volta à página de login -->
+        <a href="index.html" class="btn-logout" id="btn-logout">🚪 Sair (Logout)</a>
+    </div>
+
+    <script>
+        // ============================================
+        // Script da página de boas-vindas
+        // ============================================
+
+        // Recupera o nome do usuário salvo no sessionStorage
+        // O sessionStorage mantém dados enquanto a aba está aberta
+        const nomeUsuario = sessionStorage.getItem("usuarioLogado");
+
+        // Se não há usuário logado, redireciona de volta ao login
+        // Isso impede que alguém acesse esta página diretamente pela URL
+        if (!nomeUsuario) {
+            window.location.href = "index.html";
+        } else {
+            // Exibe o nome do usuário na página
+            document.getElementById("nome-usuario").textContent = nomeUsuario;
+        }
+
+        // Exibe a data e hora atuais do acesso
+        const agora = new Date();
+
+        // toLocaleDateString formata a data conforme o idioma
+        document.getElementById("data-acesso").textContent =
+            agora.toLocaleDateString("pt-BR", {
+                weekday: "long",  // "segunda-feira"
+                year: "numeric",  // "2024"
+                month: "long",    // "janeiro"
+                day: "numeric"    // "15"
+            });
+
+        // toLocaleTimeString formata a hora conforme o idioma
+        document.getElementById("hora-acesso").textContent =
+            agora.toLocaleTimeString("pt-BR");
+
+        // Ao clicar em "Sair", limpa o sessionStorage
+        document.getElementById("btn-logout").addEventListener("click", function() {
+            // Remove o item do sessionStorage ao fazer logout
+            sessionStorage.removeItem("usuarioLogado");
+        });
+    </script>
+</body>
+</html>

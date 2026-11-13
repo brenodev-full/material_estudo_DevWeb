@@ -1,0 +1,505 @@
+/*
+ * ============================================================
+ * 🎨 Estilos — Sistema de Boletim Escolar
+ * ============================================================
+ *
+ * Folha de estilos completa do projeto, organizada em seções:
+ *   1. Reset e Base
+ *   2. Layout e Container
+ *   3. Cabeçalho (Header) e Navegação
+ *   4. Conteúdo Principal
+ *   5. Formulário
+ *   6. Resultados e Status
+ *   7. Rodapé (Footer)
+ *   8. Utilitários
+ *   9. Responsividade
+ */
+
+/* ============================================================
+   1. RESET E BASE
+   ============================================================
+   Normaliza os estilos padrão dos navegadores para garantir
+   consistência visual em diferentes browsers.
+*/
+
+/* Box-sizing universal — inclui padding e border na largura total */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos base do documento */
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333333;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   2. LAYOUT E CONTAINER
+   ============================================================ */
+
+/* Container centralizado com largura máxima */
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Conteúdo principal ocupa o espaço disponível (flexbox) */
+.main-content {
+    flex: 1;
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+/* ============================================================
+   3. CABEÇALHO (HEADER) E NAVEGAÇÃO
+   ============================================================ */
+
+.site-header {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    color: #ffffff;
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.site-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Navegação */
+.site-nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.site-nav a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 5px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.site-nav a:hover,
+.site-nav a:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+/* ============================================================
+   4. CONTEÚDO PRINCIPAL
+   ============================================================ */
+
+/* Títulos de seção */
+.page-title {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: #666666;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* ============================================================
+   5. FORMULÁRIO
+   ============================================================ */
+
+/* Card do formulário */
+.form-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Grupo de campo (label + input) */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+/* Inputs e campos de texto */
+.form-group input[type="text"],
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #dde1e7;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fafbfc;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+    background-color: #ffffff;
+}
+
+/* Input inválido (validação) */
+.form-group input:invalid:not(:placeholder-shown) {
+    border-color: #e74c3c;
+}
+
+/* Grade de notas (2 colunas) */
+.grades-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Área de pré-visualização da média */
+.preview-area {
+    background-color: #eef2f7;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #555555;
+    border: 2px dashed #c5cdd8;
+    transition: all 0.3s ease;
+}
+
+.preview-area.active {
+    border-color: #3498db;
+    background-color: #e8f4fd;
+    color: #2c3e50;
+}
+
+.preview-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2c3e50;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Botão de envio */
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.35);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+/* ============================================================
+   6. RESULTADOS E STATUS
+   ============================================================ */
+
+/* Card do resultado */
+.result-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+/* Informações do resultado */
+.result-info {
+    margin-bottom: 25px;
+}
+
+.result-info p {
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+    color: #444444;
+}
+
+.result-info strong {
+    color: #2c3e50;
+}
+
+/* Lista de notas individuais */
+.grades-list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.grades-list li {
+    background-color: #f0f2f5;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #555555;
+    font-size: 0.95rem;
+}
+
+/* Média destacada */
+.result-average {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 15px 0 5px;
+}
+
+.result-average-label {
+    font-size: 0.9rem;
+    color: #888888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ─── Classes de Status com Cores ─── */
+
+/* 🟢 Aprovado — Verde */
+.status-aprovado {
+    color: #27ae60;
+}
+
+.status-aprovado-bg {
+    background-color: #d4efdf;
+    border: 2px solid #27ae60;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+/* 🟡 Recuperação — Amarelo/Laranja */
+.status-recuperacao {
+    color: #f39c12;
+}
+
+.status-recuperacao-bg {
+    background-color: #fdebd0;
+    border: 2px solid #f39c12;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+/* 🔴 Reprovado — Vermelho */
+.status-reprovado {
+    color: #e74c3c;
+}
+
+.status-reprovado-bg {
+    background-color: #fadbd8;
+    border: 2px solid #e74c3c;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+/* Badge de situação */
+.status-badge {
+    display: inline-block;
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.status-aprovado {
+    background-color: #d4efdf;
+    color: #1e8449;
+}
+
+.status-badge.status-recuperacao {
+    background-color: #fdebd0;
+    color: #b7950b;
+}
+
+.status-badge.status-reprovado {
+    background-color: #fadbd8;
+    color: #c0392b;
+}
+
+/* Link de voltar */
+.btn-back {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.35);
+}
+
+/* Mensagem de erro */
+.error-message {
+    background-color: #fadbd8;
+    border: 2px solid #e74c3c;
+    border-radius: 8px;
+    padding: 20px;
+    color: #c0392b;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.error-message h3 {
+    margin-bottom: 10px;
+}
+
+/* ============================================================
+   7. RODAPÉ (FOOTER)
+   ============================================================ */
+
+.site-footer {
+    background-color: #2c3e50;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 20px 0;
+    text-align: center;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+/* ============================================================
+   8. UTILITÁRIOS
+   ============================================================ */
+
+.text-center {
+    text-align: center;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+/* ============================================================
+   9. RESPONSIVIDADE
+   ============================================================
+   Ajustes para telas menores (smartphones e tablets).
+*/
+
+/* Tablets e telas pequenas (até 768px) */
+@media (max-width: 768px) {
+    .site-title {
+        font-size: 1.4rem;
+    }
+
+    .site-nav ul {
+        gap: 10px;
+    }
+
+    .site-nav a {
+        font-size: 0.85rem;
+        padding: 4px 8px;
+    }
+
+    .form-card,
+    .result-card {
+        padding: 20px;
+    }
+
+    /* Notas em coluna única no mobile */
+    .grades-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .result-average {
+        font-size: 1.8rem;
+    }
+
+    .grades-list {
+        gap: 10px;
+    }
+
+    .grades-list li {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Smartphones pequenos (até 480px) */
+@media (max-width: 480px) {
+    html {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .site-header {
+        padding: 15px 0;
+    }
+
+    .site-title {
+        font-size: 1.2rem;
+    }
+
+    .btn-submit,
+    .btn-back {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .status-badge {
+        font-size: 1.1rem;
+        padding: 8px 20px;
+    }
+}

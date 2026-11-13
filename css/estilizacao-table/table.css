@@ -1,0 +1,647 @@
+/* ==========================================================================
+   ESTILIZAÇÃO DE TABELAS DE DADOS — CSS MODERNO
+   ==========================================================================
+   Este arquivo demonstra como estilizar tabelas HTML de forma moderna,
+   limpa e responsiva. Inclui cores alternadas (zebra striping), efeitos
+   hover, caption, e uma abordagem responsiva para telas pequenas.
+
+   Estrutura esperada do HTML:
+   <div class="tabela-container">
+       <table class="tabela">
+           <caption>Título da Tabela</caption>
+           <thead>
+               <tr>
+                   <th>Coluna 1</th>
+                   <th>Coluna 2</th>
+               </tr>
+           </thead>
+           <tbody>
+               <tr>
+                   <td>Dado 1</td>
+                   <td>Dado 2</td>
+               </tr>
+           </tbody>
+           <tfoot>
+               <tr>
+                   <td colspan="2">Rodapé</td>
+               </tr>
+           </tfoot>
+       </table>
+   </div>
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. RESET E VARIÁVEIS
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* -----------------------------------------------------------------------
+       Paleta de Cores para Tabelas
+       Tons neutros e profissionais para facilitar a leitura dos dados.
+       ----------------------------------------------------------------------- */
+    --tabela-cor-primaria: #1e40af;
+    --tabela-cor-primaria-clara: #dbeafe;
+    --tabela-cor-header-bg: #1e293b;
+    --tabela-cor-header-texto: #f8fafc;
+    --tabela-cor-linha-par: #f8fafc;
+    --tabela-cor-linha-impar: #ffffff;
+    --tabela-cor-hover: #e0f2fe;
+    --tabela-cor-borda: #e2e8f0;
+    --tabela-cor-texto: #334155;
+    --tabela-cor-texto-claro: #64748b;
+    --tabela-cor-acento: #2563eb;
+    --tabela-cor-sucesso: #16a34a;
+    --tabela-cor-perigo: #dc2626;
+    --tabela-cor-aviso: #d97706;
+
+    /* Tipografia */
+    --tabela-fonte: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    --tabela-tamanho-base: 0.9rem;
+    --tabela-tamanho-sm: 0.8rem;
+
+    /* Espaçamentos */
+    --tabela-padding-celula: 12px 16px;
+    --tabela-raio-borda: 10px;
+
+    /* Sombras */
+    --tabela-sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                     0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+    /* Transições */
+    --tabela-transicao: all 0.2s ease;
+}
+
+
+/* ==========================================================================
+   2. CONTAINER DA TABELA
+   ==========================================================================
+   O container permite que a tabela tenha scroll horizontal em telas
+   pequenas (overflow-x: auto), evitando que a página inteira se deforme.
+   ========================================================================== */
+
+.tabela-container {
+    width: 100%;
+    overflow-x: auto;                         /* Scroll horizontal quando necessário */
+    border-radius: var(--tabela-raio-borda);
+    box-shadow: var(--tabela-sombra);
+    background-color: var(--tabela-cor-linha-impar);
+    margin: 24px 0;
+
+    /* Barra de scroll personalizada (WebKit: Chrome, Safari, Edge) */
+    scrollbar-width: thin;                    /* Firefox */
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.tabela-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.tabela-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.tabela-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.tabela-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================================
+   3. TABELA BASE
+   ==========================================================================
+   border-collapse: collapse é essencial para que as bordas das células
+   se fundam em uma única linha, criando um visual limpo.
+   ========================================================================== */
+
+.tabela {
+    width: 100%;
+    min-width: 600px;                         /* Largura mínima para scroll funcionar */
+    border-collapse: collapse;                /* Bordas unificadas entre células */
+    font-family: var(--tabela-fonte);
+    font-size: var(--tabela-tamanho-base);
+    color: var(--tabela-cor-texto);
+    table-layout: auto;                       /* Colunas se ajustam ao conteúdo */
+}
+
+
+/* ==========================================================================
+   4. CAPTION — TÍTULO DA TABELA
+   ==========================================================================
+   O <caption> é um elemento semântico que descreve o conteúdo da tabela.
+   É importante para acessibilidade (leitores de tela o anunciam).
+   ========================================================================== */
+
+.tabela caption {
+    caption-side: top;                        /* Posição acima da tabela */
+    text-align: left;
+    padding: 16px 20px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--tabela-cor-header-bg);
+    letter-spacing: -0.3px;
+    background-color: var(--tabela-cor-linha-impar);
+    border-radius: var(--tabela-raio-borda) var(--tabela-raio-borda) 0 0;
+}
+
+/* Subtítulo (descrição adicional) */
+.tabela caption span {
+    display: block;
+    font-size: var(--tabela-tamanho-sm);
+    font-weight: 400;
+    color: var(--tabela-cor-texto-claro);
+    margin-top: 4px;
+}
+
+
+/* ==========================================================================
+   5. CABEÇALHO DA TABELA (THEAD)
+   ==========================================================================
+   O cabeçalho tem fundo escuro e texto claro para se destacar dos dados.
+   Mantemos o cabeçalho fixo com position: sticky para tabelas longas.
+   ========================================================================== */
+
+.tabela thead {
+    background-color: var(--tabela-cor-header-bg);
+}
+
+.tabela thead th {
+    padding: var(--tabela-padding-celula);
+    text-align: left;
+    font-weight: 600;
+    font-size: var(--tabela-tamanho-sm);
+    color: var(--tabela-cor-header-texto);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;                      /* Impede quebra de linha no header */
+    position: sticky;                         /* Header fixo ao rolar verticalmente */
+    top: 0;
+    z-index: 10;
+    background-color: var(--tabela-cor-header-bg); /* Necessário para sticky funcionar */
+}
+
+/* Borda inferior sutil no header */
+.tabela thead th {
+    border-bottom: 3px solid var(--tabela-cor-acento);
+}
+
+/* Alinhamento à direita para colunas numéricas */
+.tabela th.numero,
+.tabela td.numero {
+    text-align: right;
+}
+
+/* Alinhamento centralizado */
+.tabela th.centro,
+.tabela td.centro {
+    text-align: center;
+}
+
+
+/* ==========================================================================
+   6. CORPO DA TABELA (TBODY)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   6.1. Células de dados
+   -------------------------------------------------------------------------- */
+.tabela tbody td {
+    padding: var(--tabela-padding-celula);
+    border-bottom: 1px solid var(--tabela-cor-borda);
+    vertical-align: middle;
+    transition: var(--tabela-transicao);
+}
+
+/* --------------------------------------------------------------------------
+   6.2. Cores alternadas (Zebra Striping)
+   --------------------------------------------------------------------------
+   A pseudo-classe :nth-child(even) seleciona as linhas pares (2ª, 4ª, 6ª...)
+   e aplica um fundo levemente diferente, facilitando a leitura horizontal
+   em tabelas com muitas colunas.
+   -------------------------------------------------------------------------- */
+.tabela tbody tr:nth-child(even) {
+    background-color: var(--tabela-cor-linha-par);
+}
+
+.tabela tbody tr:nth-child(odd) {
+    background-color: var(--tabela-cor-linha-impar);
+}
+
+/* --------------------------------------------------------------------------
+   6.3. Efeito Hover — Destaque ao passar o mouse sobre a linha
+   --------------------------------------------------------------------------
+   O hover ajuda o usuário a acompanhar visualmente a linha que está lendo,
+   especialmente útil em tabelas largas com muitas colunas.
+   -------------------------------------------------------------------------- */
+.tabela tbody tr:hover {
+    background-color: var(--tabela-cor-hover);
+}
+
+/* Destaque extra na célula específica sob o cursor */
+.tabela tbody tr:hover td {
+    color: var(--tabela-cor-header-bg);
+}
+
+/* --------------------------------------------------------------------------
+   6.4. Última linha sem borda inferior
+   -------------------------------------------------------------------------- */
+.tabela tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ==========================================================================
+   7. RODAPÉ DA TABELA (TFOOT)
+   ==========================================================================
+   O tfoot geralmente contém totais, médias, ou informações de resumo.
+   ========================================================================== */
+
+.tabela tfoot {
+    background-color: var(--tabela-cor-linha-par);
+    border-top: 2px solid var(--tabela-cor-borda);
+}
+
+.tabela tfoot td {
+    padding: var(--tabela-padding-celula);
+    font-weight: 700;
+    color: var(--tabela-cor-header-bg);
+    font-size: var(--tabela-tamanho-base);
+}
+
+
+/* ==========================================================================
+   8. ESTILOS PARA CONTEÚDO ESPECIAL NAS CÉLULAS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   8.1. Badges de status (Ativo, Inativo, Pendente)
+   -------------------------------------------------------------------------- */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.badge-sucesso {
+    background-color: #dcfce7;
+    color: var(--tabela-cor-sucesso);
+}
+
+.badge-perigo {
+    background-color: #fee2e2;
+    color: var(--tabela-cor-perigo);
+}
+
+.badge-aviso {
+    background-color: #fef3c7;
+    color: var(--tabela-cor-aviso);
+}
+
+.badge-info {
+    background-color: var(--tabela-cor-primaria-clara);
+    color: var(--tabela-cor-primaria);
+}
+
+/* --------------------------------------------------------------------------
+   8.2. Links dentro de células
+   -------------------------------------------------------------------------- */
+.tabela a {
+    color: var(--tabela-cor-acento);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--tabela-transicao);
+}
+
+.tabela a:hover {
+    color: var(--tabela-cor-primaria);
+    text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   8.3. Barra de progresso dentro de uma célula
+   -------------------------------------------------------------------------- */
+.progresso-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progresso-barra {
+    height: 100%;
+    background-color: var(--tabela-cor-acento);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+/* --------------------------------------------------------------------------
+   8.4. Avatar (foto pequena) em uma célula
+   -------------------------------------------------------------------------- */
+.celula-avatar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.celula-avatar img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* --------------------------------------------------------------------------
+   8.5. Ações (botões de editar/excluir dentro de uma célula)
+   -------------------------------------------------------------------------- */
+.acoes-celula {
+    display: flex;
+    gap: 8px;
+}
+
+.acoes-celula button {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid var(--tabela-cor-borda);
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    transition: var(--tabela-transicao);
+    font-family: var(--tabela-fonte);
+}
+
+.acoes-celula button:hover {
+    background-color: var(--tabela-cor-linha-par);
+}
+
+.acoes-celula .btn-editar:hover {
+    border-color: var(--tabela-cor-acento);
+    color: var(--tabela-cor-acento);
+}
+
+.acoes-celula .btn-excluir:hover {
+    border-color: var(--tabela-cor-perigo);
+    color: var(--tabela-cor-perigo);
+}
+
+
+/* ==========================================================================
+   9. VARIAÇÕES DE TABELA
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   9.1. Tabela com bordas completas
+   -------------------------------------------------------------------------- */
+.tabela-bordas td,
+.tabela-bordas th {
+    border: 1px solid var(--tabela-cor-borda);
+}
+
+/* --------------------------------------------------------------------------
+   9.2. Tabela compacta (menos padding)
+   -------------------------------------------------------------------------- */
+.tabela-compacta td,
+.tabela-compacta th {
+    padding: 8px 12px;
+    font-size: var(--tabela-tamanho-sm);
+}
+
+/* --------------------------------------------------------------------------
+   9.3. Tabela com listras verticais (colunas alternadas)
+   -------------------------------------------------------------------------- */
+.tabela-listras-verticais td:nth-child(even),
+.tabela-listras-verticais th:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* --------------------------------------------------------------------------
+   9.4. Linha selecionada / destacada
+   -------------------------------------------------------------------------- */
+.tabela tbody tr.selecionada {
+    background-color: var(--tabela-cor-primaria-clara) !important;
+    border-left: 3px solid var(--tabela-cor-acento);
+}
+
+.tabela tbody tr.selecionada td:first-child {
+    padding-left: 13px;                       /* Compensa o border-left de 3px */
+}
+
+
+/* ==========================================================================
+   10. ABORDAGEM RESPONSIVA PARA TABELAS
+   ==========================================================================
+   Tabelas são naturalmente difíceis de exibir em telas pequenas. Aqui,
+   usamos a técnica de transformar cada linha em um "card" vertical, onde
+   cada célula é exibida com seu rótulo (via data-label) ao lado.
+   
+   Requisito no HTML:
+   <td data-label="Nome">João Silva</td>
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* Remove a largura mínima para permitir layout em card */
+    .tabela {
+        min-width: unset;
+    }
+
+    /* Esconde o cabeçalho da tabela */
+    .tabela thead {
+        display: none;
+    }
+
+    /* Cada linha vira um "card" empilhado */
+    .tabela tbody tr {
+        display: block;
+        margin-bottom: 16px;
+        border: 1px solid var(--tabela-cor-borda);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Cada célula ocupa uma linha completa */
+    .tabela tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--tabela-cor-borda);
+        text-align: right;
+    }
+
+    /* Remove a borda da última célula de cada card */
+    .tabela tbody td:last-child {
+        border-bottom: none;
+    }
+
+    /* Exibe o rótulo da coluna (via atributo data-label) antes do dado */
+    .tabela tbody td::before {
+        content: attr(data-label);            /* Pega o texto do atributo HTML */
+        font-weight: 600;
+        font-size: var(--tabela-tamanho-sm);
+        color: var(--tabela-cor-texto-claro);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        text-align: left;
+        margin-right: auto;
+        padding-right: 16px;
+    }
+
+    /* Primeira célula de cada card — destaque visual */
+    .tabela tbody td:first-child {
+        background-color: var(--tabela-cor-header-bg);
+        color: var(--tabela-cor-header-texto);
+        font-weight: 600;
+    }
+
+    .tabela tbody td:first-child::before {
+        color: var(--tabela-cor-header-texto);
+        opacity: 0.7;
+    }
+
+    /* Ajuste de cores alternadas no modo card */
+    .tabela tbody tr:nth-child(even),
+    .tabela tbody tr:nth-child(odd) {
+        background-color: var(--tabela-cor-linha-impar);
+    }
+
+    /* Rodapé da tabela */
+    .tabela tfoot tr {
+        display: block;
+    }
+
+    .tabela tfoot td {
+        display: block;
+        text-align: center;
+        padding: 12px;
+    }
+}
+
+
+/* ==========================================================================
+   11. BARRA DE FERRAMENTAS DA TABELA (OPCIONAL)
+   ==========================================================================
+   Barra acima da tabela com busca, filtros e botão de exportar.
+   ========================================================================== */
+
+.tabela-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 20px;
+    background-color: var(--tabela-cor-linha-impar);
+    border-radius: var(--tabela-raio-borda) var(--tabela-raio-borda) 0 0;
+    border-bottom: 1px solid var(--tabela-cor-borda);
+}
+
+.tabela-busca {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 320px;
+}
+
+.tabela-busca input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--tabela-cor-borda);
+    border-radius: 6px;
+    font-family: var(--tabela-fonte);
+    font-size: var(--tabela-tamanho-sm);
+    outline: none;
+    transition: var(--tabela-transicao);
+}
+
+.tabela-busca input:focus {
+    border-color: var(--tabela-cor-acento);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.tabela-acoes-toolbar {
+    display: flex;
+    gap: 8px;
+}
+
+.tabela-acoes-toolbar button {
+    padding: 8px 16px;
+    font-family: var(--tabela-fonte);
+    font-size: var(--tabela-tamanho-sm);
+    font-weight: 500;
+    border: 1px solid var(--tabela-cor-borda);
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    transition: var(--tabela-transicao);
+}
+
+.tabela-acoes-toolbar button:hover {
+    background-color: var(--tabela-cor-linha-par);
+    border-color: var(--tabela-cor-acento);
+}
+
+/* --------------------------------------------------------------------------
+   Paginação da tabela
+   -------------------------------------------------------------------------- */
+.tabela-paginacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: var(--tabela-cor-linha-impar);
+    border-top: 1px solid var(--tabela-cor-borda);
+    border-radius: 0 0 var(--tabela-raio-borda) var(--tabela-raio-borda);
+    font-size: var(--tabela-tamanho-sm);
+    color: var(--tabela-cor-texto-claro);
+}
+
+.tabela-paginacao .paginas {
+    display: flex;
+    gap: 4px;
+}
+
+.tabela-paginacao .paginas button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--tabela-cor-borda);
+    border-radius: 6px;
+    background: white;
+    font-family: var(--tabela-fonte);
+    font-size: var(--tabela-tamanho-sm);
+    cursor: pointer;
+    transition: var(--tabela-transicao);
+}
+
+.tabela-paginacao .paginas button:hover {
+    background-color: var(--tabela-cor-linha-par);
+}
+
+.tabela-paginacao .paginas button.ativa {
+    background-color: var(--tabela-cor-acento);
+    color: white;
+    border-color: var(--tabela-cor-acento);
+}

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<!--
+    ================================================================
+    📰 Projeto 01 — Criação de Página de Notícia
+    ================================================================
+    Este projeto demonstra o uso de tags semânticas do HTML5 para
+    construir uma página de portal de notícias completa e realista.
+
+    Conceitos abordados:
+    - Tags semânticas: <header>, <nav>, <main>, <article>, <aside>,
+      <section>, <footer>, <figure>, <figcaption>, <blockquote>, <time>
+    - Hierarquia de headings (<h1> a <h4>)
+    - Listas de navegação
+    - Imagens com texto alternativo
+    - Citações em bloco
+    - Estrutura de página completa
+
+    Estrutura da página:
+    ┌─────────────────────────────────────────────┐
+    │  <header> — Logo + Navegação                │
+    ├─────────────────────────────┬───────────────┤
+    │  <main>                     │  <aside>      │
+    │    <article> — Notícia      │  Links        │
+    │    <section> — Comentários  │  Relacionados │
+    ├─────────────────────────────┴───────────────┤
+    │  <footer> — Copyright                       │
+    └─────────────────────────────────────────────┘
+    ================================================================
+-->
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNews Brasil — Inteligência Artificial Revoluciona a Medicina</title>
+
+    <!-- Meta tags de SEO -->
+    <meta name="description" content="Nova pesquisa revela como algoritmos de IA estão revolucionando diagnósticos médicos com 97% de precisão em detecção precoce de doenças.">
+    <meta name="keywords" content="inteligência artificial, medicina, saúde, tecnologia, IA, diagnóstico">
+    <meta name="author" content="Redação TechNews Brasil">
+
+    <!-- Open Graph para compartilhamento em redes sociais -->
+    <meta property="og:title" content="IA Revoluciona a Medicina: Diagnósticos com 97% de Precisão">
+    <meta property="og:description" content="Nova pesquisa revela como algoritmos de IA estão transformando a medicina moderna.">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="pt_BR">
+
+    <!-- Estilo básico para melhor visualização do exemplo -->
+    <style>
+        /* Reset básico e tipografia */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        /* === CABEÇALHO === */
+        header {
+            background-color: #1a1a2e;
+            color: white;
+            padding: 1rem 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header h1 span {
+            color: #e94560;
+        }
+
+        /* === NAVEGAÇÃO === */
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #a8a8b3;
+            text-decoration: none;
+            font-family: Arial, sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: #e94560;
+        }
+
+        /* === LAYOUT PRINCIPAL === */
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        main {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        aside {
+            width: 280px;
+            min-width: 250px;
+        }
+
+        /* === ARTIGO === */
+        article {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        article h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+            color: #1a1a2e;
+        }
+
+        .meta-info {
+            font-family: Arial, sans-serif;
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        article p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        article h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.5rem;
+            color: #1a1a2e;
+        }
+
+        /* === FIGURA / IMAGEM === */
+        figure {
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            background-color: #ddd;
+        }
+
+        figcaption {
+            font-size: 0.85rem;
+            color: #777;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* === CITAÇÃO === */
+        blockquote {
+            border-left: 4px solid #e94560;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            background-color: #fef5f5;
+            font-style: italic;
+            color: #555;
+        }
+
+        blockquote cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #999;
+            font-style: normal;
+        }
+
+        /* === BARRA LATERAL (ASIDE) === */
+        aside section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        aside h3 {
+            font-size: 1.1rem;
+            color: #1a1a2e;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e94560;
+        }
+
+        aside ul {
+            list-style: none;
+        }
+
+        aside li {
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        aside li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        aside a {
+            color: #1a1a2e;
+            text-decoration: none;
+            font-family: Arial, sans-serif;
+            font-size: 0.9rem;
+        }
+
+        aside a:hover {
+            color: #e94560;
+        }
+
+        /* === SEÇÃO DE COMENTÁRIOS === */
+        .comments {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .comments h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a2e;
+        }
+
+        .comment {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+        }
+
+        .comment:last-of-type {
+            border-bottom: none;
+        }
+
+        .comment h4 {
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+            color: #1a1a2e;
+        }
+
+        .comment time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .comment p {
+            margin-top: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        /* === RODAPÉ === */
+        footer {
+            background-color: #1a1a2e;
+            color: #a8a8b3;
+            text-align: center;
+            padding: 1.5rem;
+            font-family: Arial, sans-serif;
+            font-size: 0.85rem;
+            margin-top: 2rem;
+        }
+
+        footer nav {
+            margin-top: 0.5rem;
+        }
+
+        footer nav ul {
+            justify-content: center;
+        }
+
+        footer a {
+            color: #e94560;
+        }
+    </style>
+</head>
+<body>
+
+    <!--
+        =====================================================
+        HEADER — Cabeçalho da Página
+        =====================================================
+        Contém o nome/logotipo do site e a navegação principal.
+        O <header> é uma tag semântica que indica o cabeçalho
+        do site ou de uma seção.
+    -->
+    <header>
+        <!-- Nome do site/portal -->
+        <h1>Tech<span>News</span> Brasil</h1>
+
+        <!-- NAV — Navegação Principal
+             A tag <nav> indica um bloco de links de navegação.
+             Usamos uma lista não ordenada (<ul>) para organizar os links. -->
+        <nav aria-label="Navegação principal">
+            <ul>
+                <li><a href="#">Início</a></li>
+                <li><a href="#">Tecnologia</a></li>
+                <li><a href="#">Ciência</a></li>
+                <li><a href="#">Saúde</a></li>
+                <li><a href="#">Economia</a></li>
+                <li><a href="#">Opinião</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!--
+        =====================================================
+        CONTAINER — Área principal com conteúdo + barra lateral
+        =====================================================
+        Usamos uma div auxiliar para o layout flexbox.
+        Dentro temos <main> (conteúdo principal) e <aside> (barra lateral).
+    -->
+    <div class="container">
+
+        <!--
+            =================================================
+            MAIN — Conteúdo Principal da Página
+            =================================================
+            A tag <main> identifica o conteúdo principal e único
+            da página. Deve haver APENAS UM <main> por página.
+        -->
+        <main>
+
+            <!--
+                =============================================
+                ARTICLE — Artigo de Notícia
+                =============================================
+                A tag <article> representa um conteúdo independente
+                e autocontido. Um artigo deve fazer sentido sozinho,
+                mesmo fora do contexto da página (ex: se compartilhado).
+            -->
+            <article>
+                <!-- Título do artigo -->
+                <h2>Inteligência Artificial Revoluciona a Medicina: Diagnósticos com 97% de Precisão</h2>
+
+                <!-- Informações do artigo: autor, data, categoria
+                     A tag <time> com o atributo datetime permite que
+                     máquinas entendam a data de forma precisa -->
+                <p class="meta-info">
+                    Por <strong>Dra. Mariana Costa</strong> |
+                    Publicado em <time datetime="2024-11-15T10:30:00-03:00">15 de novembro de 2024</time> |
+                    Categoria: <a href="#">Tecnologia & Saúde</a>
+                </p>
+
+                <!-- Parágrafo introdutório (lide da notícia) -->
+                <p>
+                    Um estudo publicado na renomada revista <em>Nature Medicine</em> revelou que novos
+                    algoritmos de inteligência artificial são capazes de detectar doenças em estágios
+                    iniciais com uma precisão de <strong>97,3%</strong>, superando significativamente os
+                    métodos tradicionais de diagnóstico utilizados atualmente na prática clínica.
+                </p>
+
+                <!--
+                    FIGURE + FIGCAPTION — Imagem com legenda
+                    A tag <figure> agrupa uma imagem (ou outro conteúdo)
+                    com sua legenda (<figcaption>). Isso cria uma relação
+                    semântica entre a imagem e sua descrição.
+                -->
+                <figure>
+                    <!-- Imagem placeholder simulando uma foto do artigo
+                         O atributo alt é OBRIGATÓRIO para acessibilidade -->
+                    <img src="https://via.placeholder.com/800x400/1a1a2e/e94560?text=IA+na+Medicina"
+                         alt="Ilustração mostrando interface de inteligência artificial analisando exames médicos com gráficos e dados em tela"
+                         width="800"
+                         height="400"
+                         loading="lazy">
+                    <figcaption>
+                        Figura 1: Sistema de IA analisando exames de imagem em tempo real no Hospital Albert Einstein, São Paulo.
+                        (Foto: Divulgação/Instituto de Pesquisa)
+                    </figcaption>
+                </figure>
+
+                <!-- Desenvolvimento do artigo -->
+                <p>
+                    A pesquisa, conduzida por uma equipe internacional de cientistas liderada pela
+                    Universidade de São Paulo (USP) em parceria com o Massachusetts Institute of
+                    Technology (MIT), analisou mais de <strong>2 milhões de exames médicos</strong>
+                    coletados em hospitais de 15 países ao longo de cinco anos.
+                </p>
+
+                <h3>Como funciona a tecnologia</h3>
+
+                <p>
+                    O sistema utiliza uma combinação de <strong>redes neurais profundas</strong> e
+                    técnicas de <strong>aprendizado por transferência</strong> para analisar exames de
+                    imagem — como tomografias, ressonâncias magnéticas e radiografias — identificando
+                    padrões imperceptíveis ao olho humano. O algoritmo foi treinado com dados
+                    anonimizados de pacientes de diversas etnias e faixas etárias, garantindo
+                    resultados confiáveis para diferentes populações.
+                </p>
+
+                <p>
+                    Os resultados são especialmente promissores na detecção precoce de câncer de
+                    pulmão, onde o sistema alcançou uma taxa de detecção <strong>23% superior</strong>
+                    à média dos radiologistas experientes, reduzindo significativamente os casos de
+                    falso negativo.
+                </p>
+
+                <!--
+                    BLOCKQUOTE — Citação em bloco
+                    Utilizada para citações longas ou depoimentos.
+                    A tag <cite> indica a fonte da citação.
+                -->
+                <blockquote>
+                    <p>
+                        "Esta tecnologia não veio para substituir os médicos, mas para ser uma
+                        ferramenta poderosa nas mãos deles. Com a IA, conseguimos identificar
+                        anomalias que levariam semanas para serem detectadas por métodos convencionais,
+                        em questão de segundos."
+                    </p>
+                    <cite>— Prof. Dr. Ricardo Mendes, coordenador da pesquisa na USP</cite>
+                </blockquote>
+
+                <h3>Impacto no sistema de saúde brasileiro</h3>
+
+                <p>
+                    O Ministério da Saúde já demonstrou interesse na tecnologia e anunciou um projeto
+                    piloto em 50 hospitais públicos do Sistema Único de Saúde (SUS) para o primeiro
+                    semestre de 2025. A expectativa é que a ferramenta reduza o tempo médio de
+                    diagnóstico de doenças graves de <strong>45 dias para apenas 72 horas</strong>.
+                </p>
+
+                <p>
+                    Especialistas alertam, no entanto, que desafios como a infraestrutura tecnológica
+                    dos hospitais públicos, a capacitação dos profissionais de saúde e questões éticas
+                    relacionadas à privacidade dos dados dos pacientes precisam ser cuidadosamente
+                    endereçados antes da implementação em larga escala.
+                </p>
+
+                <h3>Próximos passos</h3>
+
+                <p>
+                    A equipe de pesquisadores já trabalha na próxima fase do projeto, que incluirá o
+                    diagnóstico assistido por IA em exames laboratoriais de sangue e na análise de
+                    eletrocardiogramas, com previsão de resultados preliminares para o final de 2025.
+                </p>
+            </article>
+
+            <!--
+                =================================================
+                SECTION — Seção de Comentários
+                =================================================
+                A tag <section> agrupa conteúdo tematicamente relacionado.
+                Aqui usamos para agrupar os comentários dos leitores.
+            -->
+            <section class="comments" aria-label="Comentários dos leitores">
+                <h3>Comentários (3)</h3>
+
+                <!-- Cada comentário pode ser um <article> pois é um conteúdo
+                     independente e autocontido (faz sentido sozinho) -->
+                <article class="comment">
+                    <h4>Carlos Eduardo</h4>
+                    <time datetime="2024-11-15T14:22:00-03:00">15/11/2024 às 14:22</time>
+                    <p>
+                        Que notícia fantástica! Como profissional da saúde, fico muito
+                        animado com os avanços da IA. Espero que o projeto piloto no
+                        SUS tenha sucesso e beneficie milhões de brasileiros.
+                    </p>
+                </article>
+
+                <article class="comment">
+                    <h4>Fernanda Lima</h4>
+                    <time datetime="2024-11-15T15:45:00-03:00">15/11/2024 às 15:45</time>
+                    <p>
+                        Impressionante! 97% de precisão é um número muito alto. Gostaria
+                        de saber mais sobre como garantem a privacidade dos dados dos
+                        pacientes utilizados no treinamento do algoritmo.
+                    </p>
+                </article>
+
+                <article class="comment">
+                    <h4>Roberto Almeida</h4>
+                    <time datetime="2024-11-15T18:10:00-03:00">15/11/2024 às 18:10</time>
+                    <p>
+                        Artigo muito bem escrito e informativo. A parceria entre USP e MIT
+                        mostra a importância da cooperação científica internacional. Parabéns
+                        aos pesquisadores envolvidos!
+                    </p>
+                </article>
+            </section>
+
+        </main>
+
+        <!--
+            =====================================================
+            ASIDE — Barra Lateral (Conteúdo Complementar)
+            =====================================================
+            A tag <aside> contém conteúdo RELACIONADO INDIRETAMENTE
+            ao conteúdo principal. Geralmente usado para:
+            - Links para notícias relacionadas
+            - Publicidade
+            - Widgets informativos
+            - Biografias de autor
+        -->
+        <aside>
+            <!-- Seção de notícias relacionadas -->
+            <section>
+                <h3>📰 Notícias Relacionadas</h3>
+                <ul>
+                    <li>
+                        <a href="#">Google anuncia novo modelo de IA para análise de proteínas</a>
+                    </li>
+                    <li>
+                        <a href="#">Hospital Sírio-Libanês implementa robôs cirúrgicos de última geração</a>
+                    </li>
+                    <li>
+                        <a href="#">Estudo da UNICAMP revela eficácia de telemedicina em áreas rurais</a>
+                    </li>
+                    <li>
+                        <a href="#">Brasil lidera pesquisa em biotecnologia na América Latina</a>
+                    </li>
+                    <li>
+                        <a href="#">OMS recomenda uso de IA para triagem em países em desenvolvimento</a>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Seção "Mais Lidas" -->
+            <section>
+                <h3>🔥 Mais Lidas da Semana</h3>
+                <ul>
+                    <li>
+                        <a href="#">Nova linguagem de programação promete substituir o JavaScript</a>
+                    </li>
+                    <li>
+                        <a href="#">SpaceX anuncia primeira missão tripulada a Marte para 2028</a>
+                    </li>
+                    <li>
+                        <a href="#">5G chega a 90% das capitais brasileiras até o fim do ano</a>
+                    </li>
+                    <li>
+                        <a href="#">Carro autônomo brasileiro é aprovado em testes do INMETRO</a>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Seção de newsletter -->
+            <section>
+                <h3>📧 Newsletter</h3>
+                <p style="font-size: 0.9rem; font-family: Arial, sans-serif;">
+                    Receba as últimas notícias de tecnologia direto no seu e-mail.
+                </p>
+                <!-- Formulário simples de inscrição -->
+                <form action="#" method="POST" style="margin-top: 0.5rem;">
+                    <input type="email" placeholder="Seu e-mail"
+                           required
+                           aria-label="E-mail para newsletter"
+                           style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                    <button type="submit"
+                            style="width: 100%; padding: 0.5rem; background: #e94560; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        Inscrever-se
+                    </button>
+                </form>
+            </section>
+        </aside>
+
+    </div><!-- Fim do .container -->
+
+    <!--
+        =====================================================
+        FOOTER — Rodapé da Página
+        =====================================================
+        A tag <footer> define o rodapé da página ou de uma seção.
+        Geralmente contém:
+        - Informações de copyright
+        - Links de política de privacidade e termos de uso
+        - Informações de contato
+    -->
+    <footer>
+        <!-- O símbolo &copy; gera o © (copyright) -->
+        <p>&copy; 2024 TechNews Brasil. Todos os direitos reservados.</p>
+        <nav aria-label="Links do rodapé">
+            <ul>
+                <li><a href="#">Política de Privacidade</a></li>
+                <li><a href="#">Termos de Uso</a></li>
+                <li><a href="#">Fale Conosco</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+</body>
+</html>

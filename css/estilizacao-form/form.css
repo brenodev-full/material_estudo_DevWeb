@@ -1,0 +1,699 @@
+/* ==========================================================================
+   ESTILIZAÇÃO COMPLETA DE FORMULÁRIOS — CSS MODERNO
+   ==========================================================================
+   Este arquivo demonstra como estilizar formulários HTML de forma moderna,
+   acessível e responsiva usando CSS puro. Cada seção é comentada para fins
+   de estudo.
+   
+   Estrutura esperada do HTML:
+   <form class="formulario">
+       <fieldset>
+           <legend>Dados Pessoais</legend>
+           <div class="campo">
+               <label for="nome">Nome Completo</label>
+               <input type="text" id="nome" name="nome" required>
+               <span class="mensagem-erro">Este campo é obrigatório</span>
+           </div>
+           ...
+           <button type="submit" class="btn btn-primario">Enviar</button>
+       </fieldset>
+   </form>
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. RESET E BASE
+   ==========================================================================
+   Removemos estilos padrão do navegador que podem causar inconsistências
+   e definimos box-sizing: border-box para facilitar cálculos de tamanho.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Variáveis CSS — Centralizamos cores, espaçamentos e fontes em variáveis
+   para facilitar a manutenção e garantir consistência visual.
+   -------------------------------------------------------------------------- */
+:root {
+    /* Cores principais */
+    --cor-primaria: #3b82f6;
+    --cor-primaria-hover: #2563eb;
+    --cor-primaria-foco: rgba(59, 130, 246, 0.25);
+    --cor-sucesso: #22c55e;
+    --cor-sucesso-foco: rgba(34, 197, 94, 0.25);
+    --cor-erro: #ef4444;
+    --cor-erro-foco: rgba(239, 68, 68, 0.25);
+    --cor-aviso: #f59e0b;
+
+    /* Cores de texto */
+    --cor-texto: #1e293b;
+    --cor-texto-secundario: #64748b;
+    --cor-placeholder: #94a3b8;
+
+    /* Cores de fundo e borda */
+    --cor-fundo: #f8fafc;
+    --cor-fundo-input: #ffffff;
+    --cor-borda: #cbd5e1;
+    --cor-borda-hover: #94a3b8;
+    --cor-borda-foco: var(--cor-primaria);
+
+    /* Espaçamentos */
+    --espaco-xs: 4px;
+    --espaco-sm: 8px;
+    --espaco-md: 16px;
+    --espaco-lg: 24px;
+    --espaco-xl: 32px;
+    --espaco-2xl: 48px;
+
+    /* Tipografia */
+    --fonte-principal: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    --tamanho-sm: 0.875rem;   /* 14px */
+    --tamanho-base: 1rem;      /* 16px */
+    --tamanho-lg: 1.125rem;    /* 18px */
+    --tamanho-xl: 1.25rem;     /* 20px */
+
+    /* Bordas */
+    --raio-borda: 8px;
+    --raio-borda-sm: 6px;
+    --largura-borda: 1.5px;
+
+    /* Sombras */
+    --sombra-input: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --sombra-foco: 0 0 0 3px var(--cor-primaria-foco);
+    --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                   0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+    /* Transições */
+    --transicao: all 0.2s ease;
+}
+
+
+/* ==========================================================================
+   2. CONTAINER DO FORMULÁRIO
+   ==========================================================================
+   O container principal do formulário tem fundo branco, borda arredondada
+   e sombra sutil para dar a aparência de "card" flutuante.
+   ========================================================================== */
+
+.formulario {
+    font-family: var(--fonte-principal);
+    max-width: 600px;
+    margin: var(--espaco-2xl) auto;
+    padding: var(--espaco-xl);
+    background-color: var(--cor-fundo-input);
+    border-radius: calc(var(--raio-borda) + 4px);
+    box-shadow: var(--sombra-card);
+}
+
+
+/* ==========================================================================
+   3. FIELDSET E LEGEND
+   ==========================================================================
+   O <fieldset> agrupa campos relacionados e o <legend> dá um título ao grupo.
+   Removemos a borda padrão do fieldset e estilizamos o legend como um
+   cabeçalho de seção.
+   ========================================================================== */
+
+fieldset {
+    border: none;                              /* Remove borda padrão */
+    padding: 0;
+    margin-bottom: var(--espaco-lg);
+
+    /* Separador entre fieldsets */
+    & + fieldset {
+        padding-top: var(--espaco-lg);
+        border-top: 1px solid var(--cor-borda);
+    }
+}
+
+legend {
+    font-size: var(--tamanho-xl);
+    font-weight: 700;
+    color: var(--cor-texto);
+    margin-bottom: var(--espaco-lg);
+    padding-bottom: var(--espaco-sm);
+    width: 100%;
+
+    /* Linha decorativa abaixo do legend */
+    border-bottom: 2px solid var(--cor-primaria);
+}
+
+
+/* ==========================================================================
+   4. CAMPOS (LABEL + INPUT)
+   ==========================================================================
+   Cada campo é envolvido em um <div class="campo"> que organiza o label,
+   o input e a mensagem de erro em coluna com espaçamento consistente.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   4.1. Container do campo
+   -------------------------------------------------------------------------- */
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-xs);
+    margin-bottom: var(--espaco-md);
+}
+
+/* Campos lado a lado em telas maiores */
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-md);
+}
+
+/* --------------------------------------------------------------------------
+   4.2. Labels
+   -------------------------------------------------------------------------- */
+label {
+    font-size: var(--tamanho-sm);
+    font-weight: 600;
+    color: var(--cor-texto);
+    cursor: pointer;                          /* Indica que é clicável */
+}
+
+/* Indicador visual de campo obrigatório */
+label.obrigatorio::after {
+    content: " *";
+    color: var(--cor-erro);
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   4.3. Inputs, Selects e Textareas — Estilização Base
+   --------------------------------------------------------------------------
+   Aplicamos estilos consistentes a todos os controles de formulário.
+   A transição suave em border-color e box-shadow garante feedback visual
+   agradável ao interagir com o campo.
+   -------------------------------------------------------------------------- */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="url"],
+input[type="number"],
+input[type="date"],
+input[type="search"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: var(--fonte-principal);
+    font-size: var(--tamanho-base);
+    color: var(--cor-texto);
+    background-color: var(--cor-fundo-input);
+    border: var(--largura-borda) solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    box-shadow: var(--sombra-input);
+    transition: var(--transicao);
+    outline: none;                            /* Removemos o outline padrão */
+    appearance: none;                         /* Remove estilo nativo do OS */
+    -webkit-appearance: none;
+}
+
+/* --------------------------------------------------------------------------
+   4.4. Placeholder — Texto de dica dentro do input
+   -------------------------------------------------------------------------- */
+input::placeholder,
+textarea::placeholder {
+    color: var(--cor-placeholder);
+    font-style: italic;
+    opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   4.5. Estado :hover — Mouse sobre o campo
+   -------------------------------------------------------------------------- */
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="tel"]:hover,
+input[type="url"]:hover,
+input[type="number"]:hover,
+input[type="date"]:hover,
+input[type="search"]:hover,
+select:hover,
+textarea:hover {
+    border-color: var(--cor-borda-hover);
+}
+
+/* --------------------------------------------------------------------------
+   4.6. Estado :focus — Campo com foco (ativo)
+   --------------------------------------------------------------------------
+   Usamos uma combinação de border-color e box-shadow para criar um efeito
+   de "glow" (brilho) ao redor do campo focado, melhorando a acessibilidade.
+   -------------------------------------------------------------------------- */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="search"]:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--cor-borda-foco);
+    box-shadow: var(--sombra-foco);
+}
+
+/* --------------------------------------------------------------------------
+   4.7. Textarea — Campo de texto multilinha
+   -------------------------------------------------------------------------- */
+textarea {
+    min-height: 120px;
+    resize: vertical;                         /* Permite redimensionar apenas na vertical */
+    line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   4.8. Select — Menu dropdown
+   --------------------------------------------------------------------------
+   Adicionamos uma seta customizada usando background-image SVG inline,
+   já que removemos a aparência nativa com appearance: none.
+   -------------------------------------------------------------------------- */
+select {
+    cursor: pointer;
+    padding-right: 40px;
+
+    /* Seta customizada */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8.825L.35 3.175 1.175 2.35 6 7.175 10.825 2.35l.825.825z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 12px;
+}
+
+
+/* ==========================================================================
+   5. VALIDAÇÃO — PSEUDO-CLASSES :valid E :invalid
+   ==========================================================================
+   O CSS pode fornecer feedback visual instantâneo sobre a validação do
+   formulário usando as pseudo-classes :valid e :invalid.
+   
+   NOTA: Usamos :not(:placeholder-shown) para evitar que campos vazios
+   (que ainda não foram preenchidos) apareçam como inválidos desde o início.
+   Também usamos :not(:focus) para não mudar a cor enquanto o usuário digita.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   5.1. Campo válido — borda verde quando preenchido corretamente
+   -------------------------------------------------------------------------- */
+input:valid:not(:placeholder-shown):not(:focus),
+textarea:valid:not(:placeholder-shown):not(:focus),
+select:valid:not(:focus) {
+    border-color: var(--cor-sucesso);
+}
+
+/* Ícone de check para campos válidos */
+input:valid:not(:placeholder-shown):not(:focus) {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%2322c55e' d='M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* --------------------------------------------------------------------------
+   5.2. Campo inválido — borda vermelha quando o valor é incorreto
+   -------------------------------------------------------------------------- */
+input:invalid:not(:placeholder-shown):not(:focus),
+textarea:invalid:not(:placeholder-shown):not(:focus) {
+    border-color: var(--cor-erro);
+}
+
+/* Ícone de erro para campos inválidos */
+input:invalid:not(:placeholder-shown):not(:focus) {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23ef4444' d='M8 1a7 7 0 100 14A7 7 0 008 1zm-.75 3.75a.75.75 0 011.5 0v4a.75.75 0 01-1.5 0v-4zm.75 7.25a1 1 0 110-2 1 1 0 010 2z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* --------------------------------------------------------------------------
+   5.3. Mensagem de erro — visível apenas quando o campo é inválido
+   -------------------------------------------------------------------------- */
+.mensagem-erro {
+    display: none;
+    font-size: var(--tamanho-sm);
+    color: var(--cor-erro);
+    margin-top: var(--espaco-xs);
+}
+
+/* Mostra a mensagem de erro quando o campo anterior é inválido */
+input:invalid:not(:placeholder-shown) + .mensagem-erro,
+textarea:invalid:not(:placeholder-shown) + .mensagem-erro {
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   5.4. Campo desabilitado
+   -------------------------------------------------------------------------- */
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto-secundario);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+/* ==========================================================================
+   6. CHECKBOX E RADIO
+   ==========================================================================
+   Estilizamos checkboxes e radios customizados usando a técnica de esconder
+   o input nativo e estilizar uma caixa/círculo via CSS.
+   ========================================================================== */
+
+.campo-check,
+.campo-radio {
+    display: flex;
+    align-items: center;
+    gap: var(--espaco-sm);
+    margin-bottom: var(--espaco-sm);
+    cursor: pointer;
+}
+
+.campo-check label,
+.campo-radio label {
+    font-weight: 400;
+    font-size: var(--tamanho-base);
+    cursor: pointer;
+    user-select: none;                        /* Impede seleção acidental do texto */
+}
+
+/* Estilização customizada de checkbox */
+input[type="checkbox"],
+input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--cor-primaria);         /* Cor moderna para checkbox/radio */
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* Efeito ao focar por teclado */
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+    outline: 2px solid var(--cor-primaria);
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================================
+   7. BOTÕES
+   ==========================================================================
+   Botões são elementos interativos essenciais. Criamos variações de cor
+   (primário, secundário, perigo) e estados de interação suaves.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   7.1. Estilo base compartilhado por todos os botões
+   -------------------------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--espaco-sm);
+    padding: 12px 24px;
+    font-family: var(--fonte-principal);
+    font-size: var(--tamanho-base);
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid transparent;
+    border-radius: var(--raio-borda);
+    cursor: pointer;
+    transition: var(--transicao);
+    user-select: none;
+    white-space: nowrap;                      /* Impede quebra de texto */
+}
+
+/* Foco acessível — visível apenas via teclado */
+.btn:focus-visible {
+    outline: 3px solid var(--cor-primaria);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   7.2. Botão Primário — ação principal do formulário
+   -------------------------------------------------------------------------- */
+.btn-primario {
+    background-color: var(--cor-primaria);
+    color: #ffffff;
+}
+
+.btn-primario:hover {
+    background-color: var(--cor-primaria-hover);
+    transform: translateY(-1px);               /* Efeito sutil de elevação */
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+
+.btn-primario:active {
+    transform: translateY(0);                  /* Volta à posição original */
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   7.3. Botão Secundário — ação alternativa (cancelar, voltar)
+   -------------------------------------------------------------------------- */
+.btn-secundario {
+    background-color: transparent;
+    color: var(--cor-texto);
+    border-color: var(--cor-borda);
+}
+
+.btn-secundario:hover {
+    background-color: var(--cor-fundo);
+    border-color: var(--cor-borda-hover);
+}
+
+.btn-secundario:active {
+    background-color: var(--cor-borda);
+}
+
+/* --------------------------------------------------------------------------
+   7.4. Botão Perigo — ações destrutivas (excluir, remover)
+   -------------------------------------------------------------------------- */
+.btn-perigo {
+    background-color: var(--cor-erro);
+    color: #ffffff;
+}
+
+.btn-perigo:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
+
+.btn-perigo:active {
+    transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   7.5. Botão Desabilitado
+   -------------------------------------------------------------------------- */
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* --------------------------------------------------------------------------
+   7.6. Área de ações (botões do formulário)
+   --------------------------------------------------------------------------
+   Alinha os botões no final do formulário com espaçamento entre eles.
+   -------------------------------------------------------------------------- */
+.acoes-formulario {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--espaco-md);
+    margin-top: var(--espaco-xl);
+    padding-top: var(--espaco-lg);
+    border-top: 1px solid var(--cor-borda);
+}
+
+
+/* ==========================================================================
+   8. LAYOUT RESPONSIVO COM FLEXBOX
+   ==========================================================================
+   Em telas maiores, colocamos campos lado a lado para aproveitar o espaço.
+   Em telas menores, empilhamos os campos verticalmente.
+   ========================================================================== */
+
+/* Tablet e desktop (a partir de 640px) */
+@media (min-width: 640px) {
+    .campo-grupo {
+        flex-direction: row;
+        gap: var(--espaco-md);
+    }
+
+    .campo-grupo .campo {
+        flex: 1;                              /* Cada campo ocupa espaço igual */
+    }
+
+    /* Formulário pode ser mais largo em telas maiores */
+    .formulario {
+        padding: var(--espaco-2xl);
+    }
+}
+
+/* Desktop grande (a partir de 1024px) */
+@media (min-width: 1024px) {
+    .formulario {
+        max-width: 720px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile (até 639px) — Ajustes para telas pequenas
+   -------------------------------------------------------------------------- */
+@media (max-width: 639px) {
+    .formulario {
+        margin: var(--espaco-md);
+        padding: var(--espaco-md);
+        border-radius: var(--raio-borda);
+    }
+
+    /* Botões ocupam largura total no mobile */
+    .acoes-formulario {
+        flex-direction: column;
+    }
+
+    .acoes-formulario .btn {
+        width: 100%;
+    }
+
+    legend {
+        font-size: var(--tamanho-lg);
+    }
+}
+
+
+/* ==========================================================================
+   9. ESTILOS ADICIONAIS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   9.1. Texto de ajuda abaixo de um campo
+   -------------------------------------------------------------------------- */
+.texto-ajuda {
+    font-size: var(--tamanho-sm);
+    color: var(--cor-texto-secundario);
+    margin-top: var(--espaco-xs);
+}
+
+/* --------------------------------------------------------------------------
+   9.2. Campo de busca com ícone
+   -------------------------------------------------------------------------- */
+.campo-busca {
+    position: relative;
+}
+
+.campo-busca input[type="search"] {
+    padding-left: 40px;
+}
+
+.campo-busca::before {
+    content: "🔍";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: var(--tamanho-sm);
+    pointer-events: none;                     /* Não bloqueia cliques no input */
+}
+
+/* --------------------------------------------------------------------------
+   9.3. Campo com prefixo ou sufixo (ex: R$, .com)
+   -------------------------------------------------------------------------- */
+.campo-com-prefixo {
+    display: flex;
+    align-items: stretch;
+}
+
+.campo-com-prefixo .prefixo,
+.campo-com-prefixo .sufixo {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    background-color: var(--cor-fundo);
+    border: var(--largura-borda) solid var(--cor-borda);
+    color: var(--cor-texto-secundario);
+    font-size: var(--tamanho-sm);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.campo-com-prefixo .prefixo {
+    border-right: none;
+    border-radius: var(--raio-borda) 0 0 var(--raio-borda);
+}
+
+.campo-com-prefixo .sufixo {
+    border-left: none;
+    border-radius: 0 var(--raio-borda) var(--raio-borda) 0;
+}
+
+.campo-com-prefixo input {
+    border-radius: 0;
+    flex: 1;
+}
+
+.campo-com-prefixo .prefixo + input {
+    border-radius: 0 var(--raio-borda) var(--raio-borda) 0;
+}
+
+/* --------------------------------------------------------------------------
+   9.4. Barra de progresso do formulário (passos)
+   -------------------------------------------------------------------------- */
+.progresso-form {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--espaco-xl);
+    position: relative;
+}
+
+.progresso-form .passo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espaco-xs);
+    font-size: var(--tamanho-sm);
+    color: var(--cor-texto-secundario);
+    z-index: 1;
+}
+
+.progresso-form .passo .numero {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--cor-borda);
+    color: var(--cor-texto-secundario);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--tamanho-sm);
+    transition: var(--transicao);
+}
+
+.progresso-form .passo.ativo .numero {
+    background-color: var(--cor-primaria);
+    color: white;
+}
+
+.progresso-form .passo.completo .numero {
+    background-color: var(--cor-sucesso);
+    color: white;
+}

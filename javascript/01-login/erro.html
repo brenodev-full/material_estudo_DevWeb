@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro de Login</title>
+    <style>
+        /* Reset e estilos globais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Card de erro */
+        .erro-container {
+            background: #fff;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .icone-erro {
+            font-size: 64px;
+            margin-bottom: 16px;
+            /* Animação de "pulsar" no ícone de erro */
+            animation: pulsar 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulsar {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .erro-container h1 {
+            color: #e74c3c;
+            margin-bottom: 12px;
+            font-size: 28px;
+        }
+
+        .erro-container p {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Mensagem de alerta */
+        .alerta {
+            margin-top: 20px;
+            padding: 16px;
+            background: #fef2f2;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .alerta p {
+            font-size: 14px;
+            color: #991b1b;
+            margin: 0;
+        }
+
+        /* Botão de voltar */
+        .btn-voltar {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: opacity 0.3s ease, transform 0.1s ease;
+        }
+
+        .btn-voltar:hover {
+            opacity: 0.9;
+        }
+
+        .btn-voltar:active {
+            transform: scale(0.97);
+        }
+
+        /* Contador regressivo */
+        .contador {
+            margin-top: 16px;
+            color: #999;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         Página de Erro (Após Falha no Login)
+         ============================================ -->
+    <div class="erro-container">
+        <div class="icone-erro">🚫</div>
+        <h1>Acesso Negado!</h1>
+        <p>As credenciais informadas estão incorretas.</p>
+        <p>Você excedeu o número máximo de tentativas.</p>
+
+        <!-- Mensagem de alerta -->
+        <div class="alerta">
+            <p>⚠️ Se você esqueceu suas credenciais, entre em contato com o administrador do sistema.</p>
+        </div>
+
+        <!-- Link para voltar à página de login -->
+        <a href="index.html" class="btn-voltar">🔄 Tentar Novamente</a>
+
+        <!-- Contador de redirecionamento automático -->
+        <p class="contador">
+            Redirecionando automaticamente em <strong id="contador">10</strong> segundos...
+        </p>
+    </div>
+
+    <script>
+        // ============================================
+        // Contador Regressivo para Redirecionamento
+        // ============================================
+
+        // Variável para armazenar o tempo restante
+        let tempoRestante = 10;
+
+        // Seleciona o elemento que mostra o contador
+        const elementoContador = document.getElementById("contador");
+
+        // setInterval executa uma função a cada intervalo de tempo (em milissegundos)
+        // 1000ms = 1 segundo
+        const intervalo = setInterval(function() {
+            // Decrementa o tempo
+            tempoRestante--;
+
+            // Atualiza o texto na tela
+            elementoContador.textContent = tempoRestante;
+
+            // Quando chegar a zero, redireciona
+            if (tempoRestante <= 0) {
+                // clearInterval para de executar o setInterval
+                clearInterval(intervalo);
+
+                // Redireciona para a página de login
+                window.location.href = "index.html";
+            }
+        }, 1000);
+
+        // Limpa o sessionStorage por segurança
+        sessionStorage.removeItem("usuarioLogado");
+    </script>
+</body>
+</html>
